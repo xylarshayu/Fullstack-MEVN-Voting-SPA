@@ -1,41 +1,42 @@
 <template>
-  <div id="landing-page">
+<div id="landing-page">
 
-    <div class="txt">
-      <div class="pageTitleFont" data-aos="fade-down" data-aos-duration="700">
-        <span>VOTE</span><br>FOR CHANGE
-      </div>
-      <div class="h3Font" data-aos="fade-down" data-aos-delay="50" data-aos-duration="700">
-        Your vote matters
-      </div>
-    </div>
+    <div class="title-div column align-start">
+        <div class="pageTitleFont">
+            <span class="colored">Vote</span> <span class="underline-mark">today</span><br>to have a say in <span class="colored-2">tomorrow</span>.
+        </div>
 
-    <div class="login-div column" :class="toLogin ? 'to-login':''">
-
-      <div class="row justify-space-around login-tabs">
-        <div :class="toLogin ? 'tab-selected':''" @click="toLogin=true;">Login</div>
-        <div :class="!toLogin ? 'tab-selected':''" @click="toLogin=false;">Register</div>
-      </div>
-
-      <div v-show="toLogin" class="login-form column">
-        <myInput v-model="loginUser" type="text" icon="person" placeholder="Username" class="form-input" />
-        <myInput type="text" v-model="loginPassword" icon="key" placeholder="Password" class="form-input" />
-      </div>
-
-      <div v-show="!toLogin" class="login-form column">
-        <myInput v-model="registerUser" type="text" icon="person" placeholder="Username" class="form-input" />
-        <myInput v-model="registerID" type="text" icon="badge" placeholder="National ID" class="form-input" />
-        <myInput type="text" v-model="registerPassword" icon="key" placeholder="Password" class="form-input" />
-        <myInput v-model="confirmPassword" type="text" icon="password" placeholder="Reenter password" class="form-input" />
-      </div>
-
-      <div class="button">
-        Submit
-      </div>
+        <NuxtLogo class="vote-logo" />
 
     </div>
 
-  </div>
+    <div class="login-div column align-center justify-start">
+
+        <div class="login-form column">
+            <myInput v-model="mobileno" type="number" icon="phone_android" placeholder="Mobile Number" class="form-input" :rules="mobileRules" />
+            <myInput v-model="password" type="password" icon="key" placeholder="Password" class="form-input" />
+        </div>
+
+        <div class="width100 row justify-space-between">
+            <div class="button row justify-center align-center">
+                Submit
+            </div>
+
+            <div class="button row justify-center align-center">
+                <nuxt-link to="registration" class="button-link">
+                    Register
+                </nuxt-link>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <div class="vote-quote">
+        "The ballot is stronger than the bullet." - Abraham Lincoln
+    </div>
+
+</div>
 </template>
 
 <script>
@@ -44,139 +45,126 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 export default {
-  name: 'IndexPage',
-  layout: 'empty',
+    name: 'IndexPage',
 
-  data() {
-    return {
-      toLogin: true,
-      loginUser: "",
-      loginPassword: "",
-      registerUser: "",
-      registerID: "",
-      registerPassword: "",
-      confirmPassword: "",
+    data() {
+        return {
+            mobileno: undefined,
+            password: undefined,
+            mobileRules: [
+                v => !!v || "NUMBER REQUIRED",
+                v =>
+                (v && v.length === 10) || "NUMBER MUST BE 10 DIGITS"
+            ]
+        }
+    },
+
+    mounted() {
+        AOS.init();
+    },
+
+    methods: {
+        darkToggle() {
+            this.$store.commit('dark_toggle');
+        }
+    },
+
+    created() {
+        this.$nuxt.$emit('page-load', true);
     }
-  },
 
-  mounted() {
-    AOS.init();
-  },
-  
 }
 </script>
 
 <style scoped>
-
 #landing-page {
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(0deg, var(--tertiary-color-darker), var(--tertiary-color-lighter) );
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    transition: background-color 0.2s linear;
 }
 
-.txt {
-  max-width: fit-content;
-  position: fixed;
-  top: 10vh;
-  left: 5vh;
+.title-div {
+    position: fixed;
+    left: 10vh;
+    top: 15vh;
 }
 
-.txt .pageTitleFont {
-  font-size: 4rem;
-  line-height: 110%;
-  color: var(--secondary-color-lighter);
+.vote-logo {
+    height: 50vh;
+    width: auto;
+    overflow: visible;
+    position: relative;
+    left: 15vh;
+    animation: fade 1s ease-out;
 }
 
-.txt span {
-  color: var(--primary-color);
-}
-
-.txt .h3Font {
-  font-weight: 100;
-  letter-spacing: 0.03rem;
-  line-height: 100%;
-  
+.pageTitleFont {
+    margin-bottom: 5vh;
+    padding: 0 0.8rem;
+    overflow: visible;
 }
 
 .login-div {
-  background-color: var(--menu-color);
-  border: 1px solid var(--menu-color-darker);
-  border-radius: 0.5rem;
-  padding: 2vh;
-  width: 30vw;
-  position: fixed;
-  top: 15vh;
-  right: 5vh;
-  height: 70vh;
-  transition: all 0.2s ease-in-out;
-  animation: fade 0.3s linear;
+    background-color: transparent;
+    width: 30vw;
+    position: fixed;
+    top: 35vh;
+    right: 5vh;
+    height: 70vh;
+    transition: all 0.2s ease-in-out;
 }
 
-.login-div.to-login {
-  height: 50vh;
+.login-form {
+    width: 100%;
 }
 
-.login-tabs {
-  position: relative;
-  top: 0;
-  width: 95%;
-  padding: 1vh;
-  border-radius: 8px;
-  background-color: var(--menu-color-darker);
-  align-self: center;
-  margin-bottom: 2rem;
-}
-
-.login-tabs> div{
-  padding: 1vh 4vh;
-  transition: color 0.2s linear, background-color 0.1s linear;
-  border-radius: 8px;
-}
-
-.login-tabs> div:hover{
-  color: var(--secondary-color);
-  transition: color 0.2s linear, background-color 0.1s linear;
-}
-
-.login-tabs> .tab-selected {
-  background-color: var(--menu-color);
-  transition: color 0.2s linear, background-color 0.1s linear;
-}
-
-.login-form .form-input{
-  margin-bottom: 1.5rem;
-  animation: fade 0.5s linear;
-}
-
-@keyframes fade {
-  0% { 
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.login-form .form-input {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    animation: fade 0.5s linear;
+    box-shadow: var(--box-shadow-1);
 }
 
 .login-div .button {
-  align-self: center;
-  padding: 2vh 4vh;
-  width: fit-content;
-  color: var(--menu-color-darker);
-  transition: all 0.1s linear;
-  border-radius: 8px;
-  border: 1px solid var(--tertiary-color-darker);
-  position: relative;
-  bottom: 0;
+    width: fit-content;
+    height: 3rem;
+    width: 45%;
+    text-align: center;
+    color: white;
+    box-shadow: var(--box-shadow-1);
+    transition: all 0.1s ease-in;
+    border-radius: 1.5rem;
 }
 
-.login-div .button:hover {
-  color: var(--tertiary-color);
-  border: 1px solid var(--tertiary-color-lighter);
-  transition: all 0.1s linear;
+.login-div .button:nth-of-type(1){
+    background-color: var(--muted-orange);
 }
 
+.login-div .button:nth-of-type(1):hover {
+    background-color: var(--orange);
+    transition: all 0.2s linear;
+}
 
+.login-div .button:nth-of-type(2){
+    background-color: var(--menu-color-3);
+}
 
+.login-div .button:nth-of-type(2):hover {
+    background-color: var(--menu-color-4);
+    transition: all 0.2s linear;
+}
+
+.vote-quote {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    line-height: 1;
+    font-family: FontGlobalCitizen;
+    font-size: 1.5rem;
+    color: var(--text-color-2);
+    animation: fade 0.5s ease-out;
+}
 
 /* MEDIA QUERIES  ***************************🟢🟢🟢🟢🟢🟢🟢*/
 
@@ -184,14 +172,23 @@ export default {
 
 @media only screen and (max-width: 600px) {
 
+    #landing-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+    }
+
+    .login-div {
+        top: initial;
+        right: initial;
+        bottom: 10vh;
+        width: 70vw;
+        height: 40vh !important;
+    }
 }
 
 /******************************* SM ⬛ ************************/
 
-@media only screen and (min-width: 601px) and (max-width: 960px) {
-
-
-}
-
-
+@media only screen and (min-width: 601px) and (max-width: 960px) {}
 </style>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 378.11 455.2">
+    <defs>
+        <style>
+            .cls-1,
+            .cls-2,
+            .cls-3,
+            .cls-4 {
+                fill: none;
+                filter: drop-shadow(0 5px 5px rgb(255 183 66 / 0.4));
+            }
+
+            .cls-1,
+            .cls-2 {
+                stroke: #f59f00;
+                stroke-linejoin: round;
+                filter: drop-shadow(0 5px 5px rgb(245 159 0 / 0.4));
+            }
+
+            .cls-1 {
+                stroke-width: 8px;
+            }
+
+            .cls-2 {
+                stroke-width: 9px;
+            }
+
+            .cls-3,
+            .cls-4 {
+                stroke: #ffbf47;
+                stroke-miterlimit: 10;
+                stroke-width: 5px;
+                filter: drop-shadow(0 24px 12px rgb(255 191 71 / 0.4));
+            }
+
+            .cls-3 {
+                stroke-linecap: round;
+            }
+        </style>
+    </defs>
+    <filter id="logo-glow">
+        <feDropShadow dx="" dy="0.5" stdDeviation="2" floodcolor="rgb(255, 183, 66)" />
+    </filter>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_2-2" data-name="Layer 2">
+            <polygon class="cls-1"
+                points="189.06 23.82 4 130.67 4 344.35 189.06 451.19 374.11 344.35 374.11 130.67 189.06 23.82" />
+        </g>
+        <g id="Layer_3" data-name="Layer 3">
+            <polyline class="cls-2" points="251.82 139.5 251.82 134 124.82 134 124.82 139.5" />
+            <path class="cls-3"
+                d="M238.67,36.32l-.79,13.1c-.45,7.52-8,13.51-16.93,13.51H156.83c-8.91,0-16.51-6-17-13.51L139,36.32" />
+            <line class="cls-3" x1="239.82" y1="2.5" x2="239.65" y2="5.35" />
+            <line class="cls-3" x1="137.93" y1="5.42" x2="137.74" y2="2.5" />
+            <line class="cls-3" x1="239.65" y1="13.38" x2="238.67" y2="29.5" />
+            <line class="cls-3" x1="138.98" y1="29.5" x2="137.93" y2="13.44" />
+            <path class="cls-4"
+                d="M214.38,191.63H163.27c-7.09,0-13.15-4.78-13.54-10.77L144,92c-.52-8,5.87-14.6,14.3-14.6h60.66c8.42,0,14.84,6.61,14.36,14.6l-5.39,88.88C227.52,186.85,221.48,191.63,214.38,191.63Z" />
+            <line class="cls-3" x1="154.88" y1="259.68" x2="154.65" y2="256.19" />
+            <line class="cls-3" x1="222.68" y1="256.19" x2="222.47" y2="259.68" />
+            <line class="cls-3" x1="154.65" y1="249.38" x2="154" y2="239.34" />
+            <line class="cls-3" x1="223.29" y1="239.34" x2="222.68" y2="249.38" />
+            <path class="cls-3"
+                d="M154,232.52l-1.11-17c-.41-6.39,4.7-11.67,11.44-11.67h48.51c6.73,0,11.87,5.28,11.48,11.67l-1,17" />
+            <line class="cls-4" x1="188.32" y1="62.5" x2="188.32" y2="77.5" />
+            <line class="cls-4" x1="188.32" y1="191.5" x2="188.32" y2="203.5" />
+        </g>
+        <g id="Layer_5" data-name="Layer 5">
+            <polyline class="cls-1" points="373.67 131.33 188.69 238.13 188.65 238.19 3.56 131.33" />
+            <line class="cls-1" x1="188.62" y1="238" x2="188.62" y2="451.86" />
+            <polyline class="cls-2"
+                points="124.82 139.5 124.82 140.42 124.82 145 251.82 145 251.82 140.42 251.82 139.5" />
+        </g>
+    </g>
+</svg>

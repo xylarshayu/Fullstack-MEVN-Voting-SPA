@@ -1,13 +1,13 @@
 <template>
-  <div class="myInput">
+  <div class="myInput" :style="styleIt">
     <transition name="bounce">
       <div v-if="value" class="placeholder" :class="error && error.length? 'incorrect' : ''">
-        {{placeholder}}
+        {{placeholder.toUpperCase()}}
       </div>
     </transition>
     
     <div class="row justify-start align-center width100 input" :class="error && error.length? 'incorrect' : ''">
-      <span v-if="icon && icon.length" class="row justify-start align-center icon">
+      <span v-if="icon && icon.length" class="row justify-start align-center icon" :class="value? 'icon-active':''">
         <i class="material-icons-outlined">{{icon}}</i>
       </span>
       <span class="width100">
@@ -25,21 +25,6 @@
 
 <script>
 export default {
-  mounted(){
-    if('OTPCredential' in window && this.isOTP === true){
-      window.addEventListener('DOMContentLoaded', e => {
-        const ac = new AbortController();
-        navigator.credentials.get({
-          otp: { transport:['sms'] },
-          signal: ac.signal
-        }).then(content => {
-          this.$emit('input', content.code);
-        }).catch(err => {
-          console.log("Error reading the message: ", err);
-        });
-      })
-    }
-  },
   data() {
     return {
       uniqueId: 'my_input' + Date.now(),
@@ -56,6 +41,12 @@ export default {
       set: function (newValue) {
         this.$emit('input', newValue);
       }
+    },
+    styleIt() {
+      return {
+        "--border": this.borderless? 'transparent' : 'var(--inactive-color)'
+      }
+      
     }
   },
   props: {
@@ -99,12 +90,12 @@ export default {
     max:{
       type: String
     },
-    isOTP: {
-      type: Boolean,
-      default: false
-    },
     autocomplete: {
       type: String
+    },
+    borderless: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {
@@ -166,91 +157,104 @@ export default {
 <style  scoped>
 .myInput{
   height: 46px;
-  border-radius: 6px;
+  border-radius: 0.5rem;
   width: 100%;
   position: relative;
   outline: none;
-  background-color: inherit;
+  background-color: var(--field-color);
+  --active-color: var(--menu-color);
+  --inactive-color: var(--menu-color-2);
 }
 input {
   all: unset;
   width: 100%;
 }
 .input {
-  border: 1px solid var(--tertiary-color-darker);
+  border: 0.1rem solid var(--border);
   border-radius: inherit;
   padding: 10px;
   height: 100%;
   background-color: inherit;
-  color: var(--text-color-var2);
-  font-size: inherit;
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: all 0.2s ease-in;
 }
 .input.incorrect {
-  border: 1px solid red !important;
-  color: red;
+  color: var(--warning-state-color);
 }
-.input:hover {
-  border: 1px solid var(--tertiary-color-darker);
-}
-.input:focus-within {
-  border: 1px solid var(--tertiary-color-darker);
-}
+
 .icon {
   margin-right: 10px;
-  color: var(--menu-color-darker);
+  color: var(--grey);
+  filter: brightness(0.5);
+  transition: all 0.2s ease-in;
 }
+
 .input.incorrect > .icon {
-  color: red;
+  color: yellow;
 }
-.input:hover > .icon {
-  color: var(--tertiary-color-darker);
-}
-.input:focus-within > .icon {
-  color: var(--tertiary-color-darker);
+.input:hover > .icon, .input:focus-within > .icon, .icon-active {
+  color: var(--secondary-color);
+  filter: brightness(0.9);
+  transition: all 0.2s ease-in;
 }
 ::placeholder {
-  color: var(--menu-color-darker);
+  color: var(--grey-text-color-2);
   opacity: 1; /* Firefox */
 }
 :-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  color: var(--menu-color-darker);
+  color: var(--grey-text-color-2);
 }
 ::-ms-input-placeholder {
   /* Microsoft Edge */
-  color: var(--menu-color-darker);
+  color: var(--grey-text-color-2);
 }
+
+.input:hover ::placeholder, .input:hover :-ms-input-placeholder, .input:hover ::-ms-input-placeholder {
+  color: var(--menu-color);
+}
+
 .error {
+  padding: 0 6px;
+  line-height: 1.5;
   position: absolute;
-  padding: 0 5px;
-  color: red;
   top: -10px;
+  background-color: var(--menu-color-4);
   left: 10px;
-  background-color: inherit;
+  color: var(--warning-state-color);
   max-width: 90%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  font-size: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  border-radius: 0.525rem;
+  transition: all 0.2s ease-in;
 }
 .placeholder{
-  padding: 0 5px;
+  padding: 0 6px;
+  line-height: 1.5;
   position: absolute;
   top: -10px;
-  background-color: var(--menu-color);
+  background-color: var(--menu-color-3);
   left: 10px;
-  color: var(--tertiary-color-darker);
+  color: var(--grey-lightest);
   max-width: 90%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  font-size: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.2rem;
+  border-radius: 0.525rem;
+  transition: all 0.2s ease-in;
 }
-.myInput:focus-within .placeholder{
-  color: var(--tertiary-color-darker);
+.myInput:focus-within .placeholder, .myInput:hover .placeholder{
+  color: var(--blue-against-dark-text-color);
+  transition: all 0.2s ease-in;
 }
 .placeholder.incorrect{
-  color: red;
+  color: var(--warning-state-color);
 }
 .bounce-enter-active {
   animation: bounce-in .2s;
@@ -259,7 +263,7 @@ input {
   animation: bounce-in .2s reverse;
 }
 .datetime{
-  color: var(--text-color-var2);
+  color: var(--text-color);
   background-color: inherit;
 }
 @keyframes bounce-in {
