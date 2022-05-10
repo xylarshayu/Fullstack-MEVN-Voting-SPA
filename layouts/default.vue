@@ -154,6 +154,7 @@ export default {
                 "--menu-color-4": this.isDarkMode ? 'var(--grey)' : 'var(--grey-lighter)',
                 "--menu-color-5": this.isDarkMode ? 'var(--grey)' : 'var(--grey-darker)',
                 "--text-color": this.isDarkMode ? '#FFF' : '#000',
+                "--subtext-color": this.isDarkMode ? '#60676D' : '#BEBEB5',
                 "--text-color-2": this.isDarkMode ? 'var(--white-bg-color)' : 'var(--black-bg-color)',
                 "--grey-text-color": this.isDarkMode ? 'var(--grey-lightest)' : 'var(--grey-darker)',
                 "--grey-text-color-2": this.isDarkMode ? 'var(--grey)' : 'var(--grey-darkest)',

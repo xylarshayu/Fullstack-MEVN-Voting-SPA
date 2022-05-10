@@ -18,9 +18,9 @@
 
     <div class="registration-fields" v-show="stage==1">
 
-        <myInput v-model="username" type="text" icon="person" placeholder="Username" class="form-input" :rules="usernameRules" />
-        <myInput v-model="passwordTry" type="password" icon="password" placeholder="Desired Password" class="form-input" :rules="passwordRules" />
         <myInput v-model="email" type="text" icon="mail" placeholder="Email address" class="form-input" :rules="emailRules" />
+        <myInput v-model="passwordTry" type="password" icon="password" placeholder="Desired Password" class="form-input" :rules="passwordRules" />
+        
 
         <div class="button b1 center-strict" @click="stage+=1">
             Next
@@ -48,10 +48,10 @@
 
         <div class="row justify-space-between align-center form-field">
             <myInput v-model="mobileOTP" type="text" icon="phonelink_lock" placeholder="OTP Sent on Mobile" class="form-input"/>
-            <div>
-                In <myCountdown :date="timeRemMob" :key="'mob_otp_time'+timeRemMob" @finish="mobResendClickable = true" @click="mobResendFunc" />
+            <div :class="mobResendClickable ? 'opacity0' : '' " class="opacity-transition row align-center">
+                In &nbsp;<myCountdown :date="timeRemMob" :key="'mob_otp_time'+timeRemMob" @onFinish="mobResendClickable = true" @click="mobResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
             </div>
-            <div class="button center-strict" :class="mobResendClickable ? 'pointer':'disabled-button'">
+            <div class="button center-strict" :class="mobResendClickable ? 'pointer':'disabled-button'" @click="mobResendFunc">
                 Resend
             </div>
 
@@ -59,10 +59,10 @@
 
         <div class="row justify-space-between align-center form-field">
             <myInput v-model="emailOTP" type="text" icon="mail_lock" placeholder="OTP Sent on Email" class="form-input"/>
-            <div>
-                In <myCountdown :date="timeRemEmail" :key="'email_otp_time'+timeRemEmail" @finish="emailResendClickable = true" @click="emailResendFunc" />
+            <div :class="emailResendClickable ? 'opacity0' : '' " class="opacity-transition row align-center">
+                In &nbsp;<myCountdown :date="timeRemEmail" :key="'email_otp_time'+timeRemEmail" @onFinish="emailResendClickable = true" @click="emailResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
             </div>
-            <div class="button center-strict" :class="mobResendClickable ? 'pointer':'disabled-button'">
+            <div class="button center-strict" :class="emailResendClickable ? 'pointer':'disabled-button'" @click="emailResendFunc">
                 Resend
             </div>
 
@@ -95,13 +95,7 @@ export default {
             emailRules: [
 				v => v && v.length ? (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(v).toLowerCase()) || "INCORRECT EMAIL FORMAT") : v
 			],
-            usernameRules: [
-                v => !!v || 'ENTER USERNAME',
-                v => (v && v.length >= 3) || 'MUST BE LONGER',
-                v => (v && isNaN(v[0]) ) || 'MUST START WITH A LETTER'
-            ],
             stage: 1,
-            username: undefined,
             passwordTry: undefined,
             email: undefined,
             password: undefined,
@@ -111,8 +105,8 @@ export default {
             emailOTP: undefined,
             timeRemMob: undefined,
             timeRemEmail: undefined,
-            mobResendClickable: false,
-            emailResendClickable: false,
+            mobResendClickable: true,
+            emailResendClickable: true,
 
         }
     },
@@ -129,19 +123,19 @@ export default {
     methods: {
         test() {
             this.stage += 1;
-            this.timeRemMob = Date.now() + 300000;
-            this.timeRemEmail = Date.now() + 300000;
+            this.mobResendFunc();
+            this.emailResendFunc();
         },
         mobResendFunc() {
-            if (this.mobResendFunc) {
+            if (this.mobResendClickable) {
                 this.mobResendClickable = false;
-                this.timeRemMob = Date.now() + 300000;
+                this.timeRemMob = Date.now() + 180000;
             }
         },
         emailResendFunc() {
-            if (this.emailResendFunc) {
+            if (this.emailResendClickable) {
                 this.emailResendClickable = false;
-                this.timeRemEmail = Date.now() + 300000;
+                this.timeRemEmail = Date.now() + 180000;
             }
         },
     }
@@ -214,6 +208,7 @@ export default {
 .form-field {
     margin-bottom: 1.5rem;
     width: 100%;
+    color: var(--text-color);
     animation: fade 0.5s linear;
 }
 
@@ -235,13 +230,22 @@ export default {
     background-color: var(--menu-color-3);
 }
 
+.form-field .button{
+    background-color: var(--muted-orange);
+}
+
 .button:hover {
     background-color: var(--menu-color-4);
     transition: all 0.2s linear;
 }
 
+.form-field .button:hover {
+    background-color: var(--orange);
+    transition: all 0.2s linear;
+}
+
 .button.disabled-button {
-    filter: grayscale(80%);
+    filter: grayscale(90%);
 }
 
 .country-select {
@@ -250,6 +254,7 @@ export default {
     background-size: 1rem;
     background-position: 14px;
     background-repeat: no-repeat;
+    animation: fade 0.5s linear; 
 }
 
 .b1 {

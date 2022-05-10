@@ -13,13 +13,16 @@
     <div class="login-div column align-center justify-start">
 
         <div class="login-form column">
-            <myInput v-model="mobileno" type="number" icon="phone_android" placeholder="Mobile Number" class="form-input" :rules="mobileRules" />
-            <myInput v-model="password" type="password" icon="key" placeholder="Password" class="form-input" />
+            <myInput v-model="mobileno" type="number" icon="phone_android" placeholder="Mobile Number" class="form-input" :rules="mobileRules" :max="10" />
+            <myInput v-model="password" type="password" icon="key" placeholder="Password" class="form-input with-sub" />
+            <div class="row flex-end width100 align-center input-sub">
+                Forgot Password?
+            </div>
         </div>
 
         <div class="width100 row justify-space-between">
-            <div class="button row justify-center align-center">
-                Submit
+            <div class="button row justify-center align-center" @click="loginmethod">
+                Login
             </div>
 
             <div class="button row justify-center align-center">
@@ -27,7 +30,7 @@
                     Register
                 </nuxt-link>
             </div>
-            
+
         </div>
 
     </div>
@@ -66,6 +69,14 @@ export default {
     methods: {
         darkToggle() {
             this.$store.commit('dark_toggle');
+        },
+        loginmethod() {
+            this.$toast.show('Logging in', {
+                theme: 'toasted-primary',
+                position: 'top-right',
+                duration: 3000,
+                icon: 'login'
+            })
         }
     },
 
@@ -126,6 +137,10 @@ export default {
     box-shadow: var(--box-shadow-1);
 }
 
+.login-form .form-input + .input-sub {
+    margin-bottom: 1.5rem;
+}
+
 .login-div .button {
     width: fit-content;
     height: 3rem;
@@ -137,7 +152,7 @@ export default {
     border-radius: 1.5rem;
 }
 
-.login-div .button:nth-of-type(1){
+.login-div .button:nth-of-type(1) {
     background-color: var(--muted-orange);
 }
 
@@ -146,7 +161,7 @@ export default {
     transition: all 0.2s linear;
 }
 
-.login-div .button:nth-of-type(2){
+.login-div .button:nth-of-type(2) {
     background-color: var(--menu-color-3);
 }
 

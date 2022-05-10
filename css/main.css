@@ -265,6 +265,14 @@ select option {
   opacity: 0;
 }
 
+.opacity1 {
+  opacity: 1;
+}
+
+.opacity-transition {
+  transition: opacity 0.2s ease-in-out;
+}
+
 .styled-scrollbar {
   scrollbar-color: var(--grey-darker) var(--grey-darkest);
   scrollbar-width: thin;
@@ -286,6 +294,23 @@ select option {
 .styled-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: var(--grey);
   transition: background-color 1s linear;
+}
+
+.input-sub {
+  font-size: 0.8rem;
+  padding-right: 0.5rem;
+  color: var(--subtext-color);
+  justify-content: flex-end;
+  transition: color 0.1s ease-in-out;
+}
+
+.input-sub:hover {
+  color: var(--orange);
+  transition: color 0.2s ease-in-out;
+}
+
+.with-sub {
+  margin-bottom: 0.2rem !important;
 }
 
 .vue-notification {

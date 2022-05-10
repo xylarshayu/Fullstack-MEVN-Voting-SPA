@@ -18,9 +18,7 @@ export default {
     },
     mounted() {
         window.setInterval(() => {
-            this.now = Date.now()/* 
-            console.log("Seconds rem ", this.secondsRemaining);
-            console.log("Seconds type ", typeof(this.secondsRemaining)); */
+            this.now = Date.now();
             if (!this.finish && this.secondsRemaining <= 0) {
                 this.finish = true;
                 this.$emit('onFinish');

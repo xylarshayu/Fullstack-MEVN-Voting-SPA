@@ -42,11 +42,19 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/toast'
   ],
 
   axios: {
+    credentials: false,
+    proxy: true
+  },
 
+  proxy: {
+    "/api/": {
+      target: "http://localhost:8080"
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

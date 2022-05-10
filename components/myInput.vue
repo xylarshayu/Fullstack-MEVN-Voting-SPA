@@ -11,7 +11,7 @@
         <i class="material-icons-outlined">{{icon}}</i>
       </span>
       <span class="width100">
-        <input :disabled="disabled" :id="id" :ref="uniqueId" :name="name" :type="type" :autocomplete="autocomplete" :value="value" @input="$emit('input', $event.target.value)" @change="$emit('change', value)" @blur="check" :placeholder="placeholder + (disabled ? ' (disabled)' : '')" class="width100" :min="min" :max="max" :list="uniqueId + 'data_list'"/>
+        <input :disabled="disabled" :id="id" :ref="uniqueId" :name="name" :type="type" :autocomplete="autocomplete" :value="value" @input="$emit('input', $event.target.value)" @change="$emit('change', value)" @blur="check" :placeholder="placeholder + (disabled ? ' (disabled)' : '')" class="width100" :min="min" :maxlength="max" :list="uniqueId + 'data_list'"/>
         <datalist :id="uniqueId + 'data_list'">
           <option v-for="(thisSuggestion, sIndex) in suggestions" :key="sIndex" :value="thisSuggestion"/>
         </datalist>
@@ -85,10 +85,10 @@ export default {
       type: String
     },
     min:{
-      type: String
+      type: Number
     },
     max:{
-      type: String
+      type: Number
     },
     autocomplete: {
       type: String
