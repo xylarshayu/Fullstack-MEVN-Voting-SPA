@@ -1,5 +1,5 @@
 <template>
-<div id="registration-page">
+<div id="registration-page" @keyup.enter="nextStage(stage + 1)">
 
     <div class="page-title">
         <div class="pageTitleFont">
@@ -11,18 +11,17 @@
     </div>
 
     <div class="row justify-space-between page-stage-dots">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" v-for="i in 4" :key="'page-dot'+i" @click="stage=i">
-            <circle :class="stage==i ? 'page-dot-highlighted':''" class="page-dot" cx="50" cy="50" r="50"></circle>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" v-for="i in 3" :key="'page-dot'+i" @click="dotNav(i)">
+            <circle :class="stage==i ? 'page-dot-highlighted': i == 3 ? 'page-dot-blocked' : stage == 2 ? 'pointer' : 'page-dot-blocked' " class="page-dot" cx="50" cy="50" r="50"></circle>
         </svg>
     </div>
 
     <div class="registration-fields" v-show="stage==1">
 
-        <myInput v-model="email" type="text" icon="mail" placeholder="Email address" class="form-input" :rules="emailRules" />
-        <myInput v-model="passwordTry" type="password" icon="password" placeholder="Desired Password" class="form-input" :rules="passwordRules" />
-        
+        <myInput v-model="email" type="text" icon="mail" placeholder="Email address" class="form-input" :rules="emailRules" ref="email" />
+        <myInput v-model="passwordTry" type="password" icon="password" placeholder="Desired Password" class="form-input" :rules="passwordRules" ref="passwordTry" />
 
-        <div class="button b1 center-strict" @click="stage+=1">
+        <div class="button b1 center-strict blue-button" @click="nextStage(2)">
             Next
         </div>
 
@@ -30,15 +29,15 @@
 
     <div class="registration-fields" v-show="stage==2">
 
-        <myInput v-model="password" type="password" icon="key" placeholder="Confirm Password" class="form-input" :rules="confPasswordRules" />
+        <myInput v-model="password" type="password" icon="key" placeholder="Confirm Password" class="form-input" :rules="confPasswordRules" ref="password" />
         <select name="Country" class="country-select column justify-center" v-model="country" :class="countryMethod">
 
             <option :value="undefined" disabled selected hidden>Country</option>
             <option value="india">India</option>
         </select>
-        <myInput v-model="id" type="text" icon="badge" placeholder="National ID" class="form-input" />
+        <myInput v-model="id" type="text" icon="badge" placeholder="National ID" class="form-input" ref="natid" />
 
-        <div class="button b1 center-strict" @click="test">
+        <div class="button b1 center-strict blue-button" @click="nextStage(3)">
             Next
         </div>
 
@@ -47,9 +46,10 @@
     <div class="registration-fields" v-show="stage==3">
 
         <div class="row justify-space-between align-center form-field">
-            <myInput v-model="mobileOTP" type="text" icon="phonelink_lock" placeholder="OTP Sent on Mobile" class="form-input"/>
+            <myInput v-model="mobileOTP" type="number" icon="phonelink_lock" :placeholder="'OTP Sent on '+numberHint" class="form-input" />
             <div :class="mobResendClickable ? 'opacity0' : '' " class="opacity-transition row align-center">
-                In &nbsp;<myCountdown :date="timeRemMob" :key="'mob_otp_time'+timeRemMob" @onFinish="mobResendClickable = true" @click="mobResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
+                In &nbsp;
+                <myCountdown :date="timeRemMob" :key="'mob_otp_time'+timeRemMob" @onFinish="mobResendClickable = true" @click="mobResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
             </div>
             <div class="button center-strict" :class="mobResendClickable ? 'pointer':'disabled-button'" @click="mobResendFunc">
                 Resend
@@ -58,9 +58,10 @@
         </div>
 
         <div class="row justify-space-between align-center form-field">
-            <myInput v-model="emailOTP" type="text" icon="mail_lock" placeholder="OTP Sent on Email" class="form-input"/>
+            <myInput v-model="emailOTP" type="number" icon="mail_lock" placeholder="OTP Sent on Email" class="form-input" />
             <div :class="emailResendClickable ? 'opacity0' : '' " class="opacity-transition row align-center">
-                In &nbsp;<myCountdown :date="timeRemEmail" :key="'email_otp_time'+timeRemEmail" @onFinish="emailResendClickable = true" @click="emailResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
+                In &nbsp;
+                <myCountdown :date="timeRemEmail" :key="'email_otp_time'+timeRemEmail" @onFinish="emailResendClickable = true" @click="emailResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
             </div>
             <div class="button center-strict" :class="emailResendClickable ? 'pointer':'disabled-button'" @click="emailResendFunc">
                 Resend
@@ -68,20 +69,18 @@
 
         </div>
 
-        <div class="button b1 center-strict">
-            Next
+        <div class="button b1 orange-button center-strict">
+            Submit
         </div>
 
     </div>
-
-
-
 
 </div>
 </template>
 
 <script>
 export default {
+    auth: false,
     data() {
         return {
             passwordRules: [
@@ -93,13 +92,14 @@ export default {
                 v => v == this.passwordTry || 'PASSWORDS DO NOT MATCH'
             ],
             emailRules: [
-				v => v && v.length ? (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(v).toLowerCase()) || "INCORRECT EMAIL FORMAT") : v
-			],
+                v => v && v.length ? (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(v).toLowerCase()) || "INCORRECT EMAIL FORMAT") : v
+            ],
             stage: 1,
             passwordTry: undefined,
             email: undefined,
             password: undefined,
             id: undefined,
+            mobile: "8506046684",
             country: undefined,
             mobileOTP: undefined,
             emailOTP: undefined,
@@ -115,27 +115,171 @@ export default {
             return this.$store.getters["get_dark"];
         },
         countryMethod() {
-            let j = this.isDarkMode? 'select-dark-bg' : 'select-light-bg' ;
-            let k = this.country == undefined ? 'default-option' : '' ; 
+            let j = this.isDarkMode ? 'select-dark-bg' : 'select-light-bg';
+            let k = this.country == undefined ? 'default-option' : '';
             return (j + " " + k);
+        },
+        numberHint() {
+            return this.mobile.replace(this.mobile.substring(4, 7), "****");
+        },
+        clickable() {
+
         }
     },
     methods: {
-        test() {
-            this.stage += 1;
-            this.mobResendFunc();
-            this.emailResendFunc();
-        },
-        mobResendFunc() {
-            if (this.mobResendClickable) {
-                this.mobResendClickable = false;
-                this.timeRemMob = Date.now() + 180000;
+        dotNav(i) {
+            if (this.stage == 2 && i == 1) {
+                this.stage = 1;
             }
         },
-        emailResendFunc() {
+        nextStage(x) {
+            console.log(x);
+            let error = undefined;
+            if (x == 2) {
+                for (let i in this.passwordRules) {
+                    let err = this.passwordRules[i](this.passwordTry);
+                    if (err && typeof err === 'string') {
+                        error = err;
+                        break;
+                    }
+                }
+                for (let i in this.emailRules) {
+                    let err = this.emailRules[i](this.email);
+                    if (err && typeof err === 'string') {
+                        error = err;
+                        break;
+                    }
+                }
+            }
+            else if (x == 3) {
+                if (this.password != this.passwordTry) {
+                    error = '123123';
+                } else if (!this.country || !this.id) {
+                    error = '213123';
+                }
+            }
+            if (error) {
+                this.$toast.show("Please enter all fields correctly", {
+                    theme: 'bubble',
+                    position: 'top-right',
+                    duration: 3000,
+                    icon: 'error',
+                    type: 'error'
+                });
+                return;
+            }
+            else {
+                if (x == 2) return this.stage = x;
+                else if (x == 3) {
+                    this.stage3go();
+                    return;
+                }
+            }
+        },
+
+
+        async stage3go() {
+            console.log("breee");
+            let res = {
+                data: {
+                    success: false
+                }
+            };
+            try {
+                console.log("ID given ", this.id);
+                res = await this.$axios.post('/api/natid/getnumber', {
+
+                    natid: this.id
+
+                });
+                console.log("res gotten\n", res);
+            } catch (e) {
+                console.log("Exception ", e);
+            }
+            if (res.data.success) {
+                this.mobile = res.data.mobile;
+                this.$toast.show(res.data.message, {
+                    theme: 'bubble',
+                    position: 'top-right',
+                    duration: 3000,
+                    icon: 'fingerprint',
+                    type: 'info'
+                })
+                this.mobResendFunc();
+                this.emailResendFunc();
+                this.stage = 3;
+            } else {
+                this.$toast.show(res.data.message, {
+                    theme: 'bubble',
+                    position: 'top-right',
+                    duration: 3000,
+                    icon: 'error',
+                    type: 'error'
+                })
+            }
+
+        },
+
+        async mobResendFunc() {
+            if (this.mobResendClickable) {
+                this.mobResendClickable = false;
+                let res = {
+                    data: {
+                        success: false,
+                        message: "Mobile OTP didn't generate",
+                        otptime: Date.now()
+                    }
+
+                };
+
+                try {
+                    res = await this.$axios.post('/api/otps/generate-otp', {
+                        mobile: this.mobile
+                    })
+                    console.log(res.data.otptime);
+                } catch (error) {
+                    console.log("Exception ", error);
+                }
+                this.$toast.show(res.data.message, {
+                    theme: res.data.success ? 'toasted-primary' : 'bubble',
+                    position: 'bottom-right',
+                    duration: 3000,
+                    icon: res.data.success ? 'timer' : 'sms_failed',
+                    type: res.data.success ? 'info' : 'error'
+                })
+
+                this.timeRemMob = res.data.otptime + 299000;
+            }
+        },
+
+        async emailResendFunc() {
             if (this.emailResendClickable) {
                 this.emailResendClickable = false;
-                this.timeRemEmail = Date.now() + 180000;
+                let res = {
+                    data: {
+                        success: false,
+                        message: "Email OTP didn't generate",
+                        otptime: Date.now()
+                    }
+
+                };
+
+                try {
+                    res = await this.$axios.post('/api/otps/generate-otp', {
+                        email: this.email
+                    })
+                    console.log(res.data.otptime);
+                } catch (error) {
+                    console.log("Exception ", error);
+                }
+                this.$toast.show(res.data.message, {
+                    theme: res.data.success ? 'toasted-primary' : 'bubble',
+                    position: 'bottom-right',
+                    duration: 3000,
+                    icon: res.data.success ? 'timer' : 'sms_failed',
+                    type: res.data.success ? 'info' : 'error'
+                })
+                this.timeRemEmail = Date.now() + 299000;
             }
         },
     }
@@ -143,7 +287,6 @@ export default {
 </script>
 
 <style scoped>
-
 #registration-page {
     width: 100vw;
     height: 100vh;
@@ -160,11 +303,11 @@ export default {
     background: url(~assets/india-light.svg), white;
 }
 
-.page-title .pageTitleFont:nth-of-type(1){
-    color: var(--text-color);
+.page-title .pageTitleFont:nth-of-type(1) {
+    color: var(--text-color-2);
 }
 
-.page-title .pageSubtitle{
+.page-title .pageSubtitle {
     font-size: 1.5rem;
 }
 
@@ -182,6 +325,10 @@ export default {
     fill: var(--orange) !important;
 }
 
+.page-dot-blocked {
+    fill: var(--menu-color-7) !important;
+}
+
 .page-dot {
     fill: var(--menu-color);
     transition: all 0.2s ease-in-out;
@@ -193,7 +340,7 @@ export default {
 }
 
 .registration-fields {
-    width: 40vw;
+    width: calc(1280px/2.5);
     padding-top: 1rem;
 
 }
@@ -212,7 +359,7 @@ export default {
     animation: fade 0.5s linear;
 }
 
-.form-field> .form-input {
+.form-field>.form-input {
     width: 50%;
     margin-bottom: 0;
     animation: none;
@@ -227,16 +374,10 @@ export default {
     box-shadow: var(--box-shadow-1);
     transition: all 0.1s ease-in;
     border-radius: 1.5rem;
-    background-color: var(--menu-color-3);
 }
 
-.form-field .button{
+.form-field .button {
     background-color: var(--muted-orange);
-}
-
-.button:hover {
-    background-color: var(--menu-color-4);
-    transition: all 0.2s linear;
 }
 
 .form-field .button:hover {
@@ -254,14 +395,10 @@ export default {
     background-size: 1rem;
     background-position: 14px;
     background-repeat: no-repeat;
-    animation: fade 0.5s linear; 
+    animation: fade 0.5s linear;
 }
 
 .b1 {
     margin-top: 2rem;
 }
-
-
-
-
 </style>

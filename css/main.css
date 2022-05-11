@@ -3,12 +3,13 @@
   --primary-color-2: rgb(255, 154, 1);
   --muted-primary-1: #E68E00;
   --muted-primary-2: #B86900;
-  --secondary-color: rgb(0, 160, 255);
+  --secondary-color: #00a0ff;
   --secondary-color-2: #66c4f9;
   --black-bg-color: rgb(17, 18, 19);
   --white-bg-color: #F0F7F4;
   --grey-darker: rgb(24, 40, 53);
   --grey-darkest: rgb(6, 11, 14);
+  --grey-mid: #2B4860;
   --grey: rgb(49, 90, 114);
   --grey-lighter: #629BBC;
   --grey-lightest: #A9C8DA;
@@ -304,13 +305,62 @@ select option {
   transition: color 0.1s ease-in-out;
 }
 
-.input-sub:hover {
+.input-sub.left {
+  padding-right: 0;
+  padding-left: 0.5rem;
+  justify-content: flex-start;
+}
+
+.input-sub a:hover {
   color: var(--orange);
   transition: color 0.2s ease-in-out;
 }
 
 .with-sub {
   margin-bottom: 0.2rem !important;
+}
+
+.orange-button {
+  background-color: var(--muted-orange) !important;
+}
+
+.orange-button:hover {
+  background-color: var(--orange) !important;
+  transition: all 0.2s linear;
+}
+
+.blue-button {
+  background-color: var(--secondary-color) !important;
+}
+
+.blue-button:hover {
+  background-color: var(--secondary-color-2) !important;
+  transition: all 0.2s linear;
+}
+
+.orange-button-text {
+  color: var(--muted-orange);
+  transition: color 0.1s ease-in-out;
+}
+
+.orange-button-text:hover {
+  color: var(--orange);
+  transition: color 0.1s ease-in-out;
+}
+
+.blue-button-text {
+  color: var(--secondary-color);
+  transition: color 0.1s ease-in-out;
+}
+
+.blue-button-text:hover {
+  color: var(--secondary-color-2);
+  transition: color 0.1s ease-in-out;
+}
+
+.grey-button-text {
+  color: var(--subtext-color);
+  transition: color 0.1s ease-in-out;
 }
 
 .vue-notification {

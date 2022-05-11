@@ -13,16 +13,25 @@ router.post('/generate-otp', async (req, res) => {
 		let otp = undefined;
 		if (mobile) {
 			let regExp = /[a-zA-Z]/g;
-			if (mobile.length != 10 || regExp.test(mobile)) return res.send("Invalid number");
-			otp = await otpModel.findOne({'mobile': mobile}, '_id');
+			if (mobile.length != 10 || regExp.test(mobile)) return res.json( {
+				success: false,
+				message : "Invalid number"
+			} );
+			otp = await otpModel.findOne({'mobile': mobile}, 'created');
 		}
 		else if (email) {
 			let regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-			if (!regExp.test(email)) return res.send("Invalid email address");
-			otp = await otpModel.findOne({'email': email}, '_id');
+			if (!regExp.test(email)) return res.json({
+				success: false,
+				message: "Invalid Email Address"
+			});
+			otp = await otpModel.findOne({'email': email}, 'created');
 		}
 		else {
-			return res.status(400).send("Invalid request body");
+			return res.status(400).json({ 
+				success: false,
+				message: "Invalid Request Body"
+			});
 		}
 		
 		if (!otp) {
@@ -45,7 +54,11 @@ router.post('/generate-otp', async (req, res) => {
 			otp = await otp.save();
 		}
 		console.log(otp);
-		return res.send(otp._id);
+		return res.json({
+			success: true,
+			message: "OTP generated successfully for " + (mobile || email),
+			otptime : otp.created.getTime(),
+		});
 	}
 	catch (error) {
 		console.log("Exception OTP:\n", error);
@@ -54,7 +67,10 @@ router.post('/generate-otp', async (req, res) => {
 })
 
 router.get('/verifyotp', checkotp, async (req, res) => {
-	res.send(true);
+	res.json({
+		success: true,
+		message: "OTP correct"
+	});
 });
 
 

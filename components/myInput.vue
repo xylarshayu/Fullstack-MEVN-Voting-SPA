@@ -185,6 +185,7 @@ input {
 
 .icon {
   margin-right: 10px;
+  width: 2rem;
   color: var(--grey);
   filter: brightness(0.5);
   transition: all 0.2s ease-in;

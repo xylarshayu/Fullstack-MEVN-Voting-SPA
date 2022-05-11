@@ -12,29 +12,36 @@ router.post('/signup', checkotp, async (req, res) => {
 		let mobile = req.body.mobile;
 		let email = req.body.email;
 		let pass = req.body.password;
+		let country = req.body.country;
 		let thisMobile = await userModel.findOne({ 'mobile': mobile }, 'mobile');
-		if (thisMobile) return res.send('Account with mobile No. already exist');
+		if (thisMobile) return res.json({
+			success: false,
+			message: "User already exists with this number"
+		});
 		let thisEmail = await userModel.findOne({ 'email': email }, 'email');
-		if (thisEmail) return res.send('Account with email already exists');
+		if (thisEmail) return res.json({
+			success: false,
+			message: "User already exists with this email"
+		});
 		let newUser = new userModel({ 
 			mobile: mobile,
 			email: email,
-			password: pass
+			password: pass,
+			country: country
 		})
-		let access_token = newUser.generateAccessToken();
-		let refresh_token = newUser.generateRefreshToken();
-		let new_tokens = {
-			"auth": access_token,
-			"refresh": refresh_token,
-		}
-		newUser.refresh_token = refresh_token;
 		newUser = await newUser.save();
-		console.log("User and refresh token ", newUser);
-		res.json(new_tokens);
+		console.log("Signed up successfully:\n", newUser);
+		res.json({
+			success: true,
+			message: "Welcome to Voter-Space"
+		});
 		
 	} catch (error) {
 		console.log("Exception users/signup", error);
-		res.send("Internal server error: ");
+		res.json({
+			success: false,
+			message: "Internal Server Error"
+		});
 	}
 
 })
@@ -52,14 +59,14 @@ router.post('/refresh-token', auth, async (req, res) => {
 		if (thisUser.refresh_token === refresh_token) {
 
 			let access_token = thisUser.generateAccessToken();
-			res.json({ "auth": access_token });
+			res.json({ "access_token": access_token });
 
 		} else {
 			res.status(401).send("Bad Request!");
 		}
 	} catch (error) {
 		console.log("Exception refresh token", error);
-		res.send("Refresh Token error");
+		res.status(500).send("Refresh Token error");
 	}
 })
 
@@ -68,9 +75,18 @@ router.post('/pre-login', async (req, res) => {
 		let mobile = req.body.mobile;
 		let pass = req.body.password;
 		let thisUser = await userModel.findOne({'mobile' : mobile}, 'password');
-		if (!thisUser) return res.send("User doesn't exist");
-		if (thisUser.password != pass) return res.send("Incorrect password");
-		else return res.send(true);
+		if (!thisUser) return res.json({
+			success: false,
+			message: "User doesn't exist"
+		});
+		if (thisUser.password != pass) return res.json({
+			success: false,
+			message: "Password Incorrect"
+		});
+		else return res.json({
+			success: true,
+			message: "OTPs generated"
+		});
 	}
 	catch (error) {
 		console.log("Exception pre-login:\n", error);
@@ -100,6 +116,25 @@ router.post('/login', checkotp, async (req, res) => {
 	}
 })
 
+router.post('/logout', async(req, res) => {
+	try {
+		let mobile = req.body.mobile;
+		let thisUser = await userModel.findOne({ 'mobile': mobile }, 'refresh_token');
+		if (!thisUser) return res.json({
+			success: false,
+			message: "User doesn't exist?"
+		});
+		thisUser.refresh_token = "";
+		res.json({
+			success: true,
+			message: "Logged out"
+		});
+	}
+	catch (error) {
+		console.log("Exception logout error:\n", error);
+		res.status(500).send("Internal Server Error");
+	}
+})
 
 
 module.exports = router;

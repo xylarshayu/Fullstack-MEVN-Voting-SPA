@@ -12,13 +12,19 @@ let otpVerify = async (req, res, next) => {
         else {
             thisOtp = await otpModel.findOne({ 'email': email }, 'otp');
         }
-        if (!thisOtp) return res.status(403).send("No OTP registered");
-        if (thisOtp.otp != otp) return res.status(401).send("Incorrect OTP");
+        if (!thisOtp) return res.status(403).json({ 
+            success: false,
+            message: "No OTP Registered"
+        });
+        if (thisOtp.otp != otp) return res.status(401).json({ 
+            success: false,
+            message: "Incorrect OTP"
+        });
         next();
     }
     catch (error) {
         console.log(error);
-        res.send("Internal server error - checkotp");
+        res.status(500).send("Internal server error - checkotp");
     }
 
 }

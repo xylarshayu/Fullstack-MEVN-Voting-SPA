@@ -1,5 +1,5 @@
 <template>
-<div id="landing-page">
+<div id="landing-page" @keyup.enter="loginmethod">
 
     <div class="title-div column align-start">
         <div class="pageTitleFont">
@@ -16,7 +16,7 @@
             <myInput v-model="mobileno" type="number" icon="phone_android" placeholder="Mobile Number" class="form-input" :rules="mobileRules" :max="10" />
             <myInput v-model="password" type="password" icon="key" placeholder="Password" class="form-input with-sub" />
             <div class="row flex-end width100 align-center input-sub">
-                Forgot Password?
+                <nuxt-link to="/forgotpass">Forgot Password?</nuxt-link>
             </div>
         </div>
 
@@ -49,6 +49,7 @@ import 'aos/dist/aos.css';
 
 export default {
     name: 'IndexPage',
+    auth: false,
 
     data() {
         return {
@@ -70,13 +71,47 @@ export default {
         darkToggle() {
             this.$store.commit('dark_toggle');
         },
-        loginmethod() {
-            this.$toast.show('Logging in', {
-                theme: 'toasted-primary',
-                position: 'top-right',
-                duration: 3000,
-                icon: 'login'
-            })
+        async loginmethod() {
+            if (this.mobileno && this.mobileno.toString().length === 10 && this.password ) {
+                let res = {
+                    data: {
+                        success: false,
+                        message: "Incorrect Credentials"
+                    }
+                }
+                try {
+                    res = await this.$axios.post('/api/users/pre-login', {
+                    mobile: this.mobileno,
+                    password: this.password
+                })
+                }
+                catch (e) {
+                    console.log(e);
+                }
+                if (res.data.success) {
+                    this.$router.push({path: 'login'});
+                }
+                else {
+                    console.log(res.data);
+                    this.$toast.show(res.data.message, {
+                    theme: 'bubble',
+                    position: 'top-right',
+                    duration: 3000,
+                    icon: 'error',
+                    type: 'error'
+                });
+                }
+            }
+            else {
+                this.$toast.show("Please enter the fields properly", {
+                    theme: 'bubble',
+                    position: 'top-right',
+                    duration: 3000,
+                    icon: 'error',
+                    type: 'error'
+                });
+            }
+            
         }
     },
 

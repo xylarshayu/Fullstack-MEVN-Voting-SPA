@@ -153,6 +153,8 @@ export default {
                 "--menu-color-3": this.isDarkMode ? 'var(--grey-darker)' : 'var(--grey)',
                 "--menu-color-4": this.isDarkMode ? 'var(--grey)' : 'var(--grey-lighter)',
                 "--menu-color-5": this.isDarkMode ? 'var(--grey)' : 'var(--grey-darker)',
+                "--menu-color-6": this.isDarkMode ? 'var(--grey-darkest)' : 'var(--grey)',
+                "--menu-color-7": this.isDarkMode ? 'var(--grey-darkest)' : 'var(--grey-lightest)',
                 "--text-color": this.isDarkMode ? '#FFF' : '#000',
                 "--subtext-color": this.isDarkMode ? '#60676D' : '#BEBEB5',
                 "--text-color-2": this.isDarkMode ? 'var(--white-bg-color)' : 'var(--black-bg-color)',
@@ -170,11 +172,12 @@ export default {
     created() {
         this.$nuxt.$on('page-load', ($event) => {
             this.hasLogo = $event;
-        })
+        });
+        this.$store.dispatch('setTheme');
     },
     methods: {
         darkToggle() {
-            this.$store.commit('dark_toggle');
+            this.$store.dispatch('switchTheme');
         }
     }
 }
