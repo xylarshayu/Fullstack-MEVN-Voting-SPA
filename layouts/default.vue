@@ -284,7 +284,8 @@ header.header-shifted {
 }
 
 .nav-buttons .material-symbols-rounded.logout:hover {
-    color: #FF42E9;
+    color: rgb(255, 66, 233);
+    text-shadow: var(--pink-glow);
     transition: all 0.2s ease-in-out;
 }
 

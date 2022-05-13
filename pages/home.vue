@@ -88,6 +88,7 @@ export default {
 .baseFont {
     font-weight: 100;
     padding-top: 0.5rem;
+    transition: all 0.2s ease-in-out;
 }
 
 .page-title-div a {
