@@ -1,51 +1,51 @@
 <template>
 <div :style="styleIt" class="default-layout">
-    <header class="row justify-space-between align-center">
+    <header class="row justify-space-between align-center" :class="hasScrolled ? 'header-shifted':''">
         <nuxt-link to="/" class="voter-space row align-center">
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 378.11 455.2">
                 <defs>
-                    
-<style>
-.overall {
-    overflow: visible;
-}
 
-.cls-1,
-.cls-2,
-.cls-3,
-.cls-4 {
-    fill: none;
-    overflow: visible;
-}
+                    <style>
+                        .overall {
+                            overflow: visible;
+                        }
 
-.cls-1,
-.cls-2 {
-    stroke: #f59f00;
-    stroke-linejoin: round;
-    filter: drop-shadow(0 4x 30px rgb(245 159 0 / 0.4));
-}
+                        .cls-1,
+                        .cls-2,
+                        .cls-3,
+                        .cls-4 {
+                            fill: none;
+                            overflow: visible;
+                        }
 
-.cls-1 {
-    stroke-width: 16px;
-}
+                        .cls-1,
+                        .cls-2 {
+                            stroke: #f59f00;
+                            stroke-linejoin: round;
+                            filter: drop-shadow(0 4x 30px rgb(245 159 0 / 0.4));
+                        }
 
-.cls-2 {
-    stroke-width: 18px;
-}
+                        .cls-1 {
+                            stroke-width: 16px;
+                        }
 
-.cls-3,
-.cls-4 {
-    stroke: #ffbf47;
-    stroke-miterlimit: 10;
-    stroke-width: 10px;
-    filter: drop-shadow(0 7px 44px rgb(255 191 71 / 0.4));
-}
+                        .cls-2 {
+                            stroke-width: 18px;
+                        }
 
-.cls-3 {
-    stroke-linecap: round;
-}
-</style>
+                        .cls-3,
+                        .cls-4 {
+                            stroke: #ffbf47;
+                            stroke-miterlimit: 10;
+                            stroke-width: 10px;
+                            filter: drop-shadow(0 7px 44px rgb(255 191 71 / 0.4));
+                        }
+
+                        .cls-3 {
+                            stroke-linecap: round;
+                        }
+                    </style>
                 </defs>
                 <filter id="sofGlow" height="300%" width="300%" x="-75%" y="-75%">
                     <feMorphology operator="dilate" radius="4" in="SourceAlpha" result="thicken" />
@@ -105,8 +105,12 @@
         </nuxt-link>
 
         <div class="nav-buttons row justify-space-around align-center">
-            <nuxt-link to="/settings" class="material-symbols-rounded row justify-center align-center">
+            <nuxt-link to="/settings" class="material-symbols-rounded row justify-center align-center" v-if="$auth.loggedin">
                 settings
+            </nuxt-link>
+
+            <nuxt-link to="/issue" class="material-symbols-rounded row justify-center align-center" v-else>
+                report
             </nuxt-link>
 
             <nuxt-link to="/home" class="material-symbols-rounded row justify-center align-center">
@@ -117,7 +121,11 @@
                 {{theme}}
             </div>
 
-            <nuxt-link to="/" class="material-symbols-rounded row justify-center align-center">
+            <div class="material-symbols-rounded row justify-center align-center logout" v-if="$auth.loggedin">
+                logout
+            </div>
+
+            <nuxt-link to="/" class="material-symbols-rounded row justify-center align-center" v-else>
                 person
             </nuxt-link>
         </div>
@@ -130,7 +138,8 @@
 export default {
     data() {
         return {
-            hasLogo: false
+            hasLogo: false,
+            hasScrolled: false,
         }
     },
     computed: {
@@ -164,21 +173,27 @@ export default {
                 "--blue-glow": this.isDarkMode ? 'var(--dark-blue-glow)' : 'var(--secondary-glow)',
                 "--orange-glow": this.isDarkMode ? 'var(--primary-glow)' : 'var(--primary-glow-2)',
                 "--orange": this.isDarkMode ? 'var(--primary-color-2)' : 'var(--primary-color)',
-                "--muted-orange": this.isDarkMode ? 'var(--muted-primary-2)' : 'var(--muted-primary-1)'
+                "--muted-orange": this.isDarkMode ? 'var(--muted-primary-2)' : 'var(--muted-primary-1)',
+                "--bg-blur": this.isDarkMode ? 'var(--black-transparent-color)' : 'var(--white-transparent-color)'
 
             }
         }
     },
     created() {
-        this.$nuxt.$on('page-load', ($event) => {
-            this.hasLogo = $event;
-        });
+        window.addEventListener('scroll', this.checkScrolled, {passive: true});
         this.$store.dispatch('setTheme');
     },
     methods: {
         darkToggle() {
             this.$store.dispatch('switchTheme');
+        },
+        checkScrolled() {
+            this.hasScrolled = (window.scrollY > 50);
+            console.log("Z");
         }
+    },
+    destroyed() {
+        window.removeEventListener('scroll', this.checkScrolled, {passive: true});
     }
 }
 </script>
@@ -188,14 +203,27 @@ header {
     height: 3rem;
     background-color: transparent;
     position: fixed;
+    z-index: 9000;
     top: 0;
     width: 100%;
     overflow: visible;
+    box-shadow: none;
+    filter: brightness(1);
+    transition: all 0.3s ease-in-out;
+}
+
+header.header-shifted {
+    box-shadow: var(--box-shadow-5);
+    backdrop-filter: blur(2px);
+    background-color: var(--bg-blur);
+    transition: all 0.3s ease-in-out;
 }
 
 .default-layout {
-    width: 100vw;
+    max-width: 100vw;
     min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
 }
 
 .voter-space svg {
@@ -251,22 +279,31 @@ header {
     transition: all 0.2s ease-in-out;
 }
 
+.nav-buttons .material-symbols-rounded.logout:hover {
+    color: #FF42E9;
+    transition: all 0.2s ease-in-out;
+}
+
 .nav-buttons .nuxt-link-exact-active {
     color: var(--primary-color);
     text-shadow: var(--box-shadow-1), var(--dark-glow), var(--secondary-glow);
 }
 
+.nav-buttons .nuxt-link-exact-active:hover {
+    color: var(--primary-color);
+}
+
 .nav-buttons div {
-    transition: font-size 0.1s eaase-in-out;
+    transition: font-size 0.1s ease-in-out;
 }
 
 .nav-buttons div:hover {
     font-size: 1.9rem;
-    transition: font-size 0.1s eaase-in-out;
+    transition: font-size 0.1s ease-in-out;
 }
 
 .nav-buttons div:active {
     font-size: 1.5rem !important;
-    transition: font-size 0.1s eaase-in-out;
+    transition: font-size 0.1s ease-in-out;
 }
 </style>

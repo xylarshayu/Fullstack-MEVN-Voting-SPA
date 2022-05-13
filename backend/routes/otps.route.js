@@ -13,10 +13,12 @@ router.post('/generate-otp', async (req, res) => {
 		let otp = undefined;
 		if (mobile) {
 			let regExp = /[a-zA-Z]/g;
-			if (mobile.length != 10 || regExp.test(mobile)) return res.json( {
+			if (mobile.length != 10 || regExp.test(mobile)) {
+				console.log(mobile);
+				return res.json( {
 				success: false,
 				message : "Invalid number"
-			} );
+			} );}
 			otp = await otpModel.findOne({'mobile': mobile}, 'created');
 		}
 		else if (email) {
@@ -66,7 +68,7 @@ router.post('/generate-otp', async (req, res) => {
 	}
 })
 
-router.get('/verifyotp', checkotp, async (req, res) => {
+router.post('/verifyotp', checkotp, async (req, res) => {
 	res.json({
 		success: true,
 		message: "OTP correct"

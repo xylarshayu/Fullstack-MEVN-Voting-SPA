@@ -2,28 +2,28 @@
 <div id="login-page" class="column align-center">
 
     <div class="container">
-    <div class="page-title h1Font">
-        OTP Sent to {{number}}
-    </div>
-
-    <myInput v-model="mobileOTP" type="number" icon="phonelink_lock" placeholder="OTP Sent on Mobile" class="form-input" />
-
-    <div class="input-sub">
-        <span v-if="!mobResendClickable" class="grey-button-text">
-            Resend OTP in
-            <myCoundown :date="timeRemMob" :key="'mob_otp_time' + timeRemMob" @onFinish="mobResendClickable = true" />
-        </span>
-        <span class="blue-button-text pointer" @click="mobResendFunc" v-else>
-            Resend
-        </span>
-    </div>
-
-    <div class="button-div row justify-end">
-        <div class="button center-strict" :class="clickable ? '': 'disabled-button'">
-            Submit
+        <div class="page-title h2Font">
+            OTP Sent to {{number}}
         </div>
-    </div>
-    
+
+        <myInput v-model="mobileOTP" type="number" icon="phonelink_lock" placeholder="OTP Sent on Mobile" class="form-input" />
+
+        <div class="input-sub">
+            <span v-if="!mobResendClickable" class="grey-button-text">
+                Resend OTP in
+                <myCountdown :grey="true" :date="timeRemMob" :key="'mob_otp_time' + timeRemMob" @onFinish="mobResendClickable = true" />
+            </span>
+            <span class="blue-button-text pointer" @click="mobResendFunc" v-else>
+                Resend
+            </span>
+        </div>
+
+        <div class="button-div row justify-end">
+            <div class="button center-strict" :class="clickable ? '': 'disabled-button'">
+                Submit
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -36,29 +36,48 @@ export default {
         return {
             mobileOTP: undefined,
             mobResendClickable: false,
-            timeRemMob: undefined
+            timeRemMob: undefined,
+            number: undefined,
         }
     },
     computed: {
         clickable() {
             let k = '';
-            if (this.mobileOTP) {k = this.mobileOTP.toString()}
+            if (this.mobileOTP) {
+                k = this.mobileOTP.toString()
+            }
             return (k.length > 3);
         }
     },
+    mounted() {
+        this.number = this.$store.getters['get_tentnum'];
+        this.mobResendFunc();
+    },
     methods: {
         async mobResendFunc() {
-            try {
-                let res = await this.$axios.post('/api/otp/generate-otp', {
-                    mobile: this.$auth.user.mobile,
-                })
-                if (res && res.data) {
-                    console.log(res.data);
-                    this.timeRemMob = Date.now() + 300000;
+            let res = {
+                data: {
+                    success: false,
+                    message: "OTP did not generate",
+                    otptime: Date.now()
                 }
-            } catch (e) {
-
             }
+            try {
+                res = await this.$axios.post('/api/otps/generate-otp', {
+                    mobile: this.number,
+                })
+                console.log(res.data);
+            } catch (e) {
+                console.log("Exception:\n", e);
+            }
+            this.timeRemMob = res.data.otptime + 299000;
+            this.$toast.show(res.data.message, {
+                theme: res.data.success ? 'toasted-primary' : 'bubble',
+                position: 'top-right',
+                duration: 6000,
+                icon: res.data.success ? 'timer' : 'sms_failed',
+                type: res.data.success ? 'info' : 'error'
+            })
         }
     }
 
@@ -83,26 +102,25 @@ export default {
 }
 
 .page-title {
-    width: 20rem;
+    width: 25rem;
     text-align: start;
     margin-bottom: 1.5rem;
     color: var(--white-bg-color);
 }
 
 .form-input {
-    width: 20rem;
+    width: 25rem;
     box-shadow: var(--box-shadow-1);
 }
 
 .input-sub {
-    width: 20rem;
+    width: 25rem;
     text-align: right;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-
 .button-div {
-    width: 20rem;
+    width: 25rem;
 }
 
 .button {

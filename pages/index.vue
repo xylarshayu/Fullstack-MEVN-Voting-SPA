@@ -43,10 +43,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-
 export default {
     name: 'IndexPage',
     auth: false,
@@ -64,15 +60,30 @@ export default {
     },
 
     mounted() {
-        AOS.init();
+            if (this.$route.query.to == "loggedout") {
+                this.$toast.show("Logged out", {
+                    theme: 'toasted-primary',
+                    position: 'top-right',
+                    duration: 3000,
+                    icon: 'logout'
+                })
+            } else if(this.$route.query.to == "pleaselogin") {
+                this.$toast.show("Log in to be able to vote", {
+                    theme: 'toasted-primary',
+                    position: 'top-right',
+                    duration: 5000,
+                    icon: 'volunteer_activism'
+                })
+            }
+        
     },
 
     methods: {
-        darkToggle() {
-            this.$store.commit('dark_toggle');
+        setTentNum() {
+            this.$store.commit('SET_TENTATIVE_NUMBER', this.mobileno);
         },
         async loginmethod() {
-            if (this.mobileno && this.mobileno.toString().length === 10 && this.password ) {
+            if (this.mobileno && this.mobileno.toString().length === 10 && this.password) {
                 let res = {
                     data: {
                         success: false,
@@ -81,28 +92,28 @@ export default {
                 }
                 try {
                     res = await this.$axios.post('/api/users/pre-login', {
-                    mobile: this.mobileno,
-                    password: this.password
-                })
-                }
-                catch (e) {
+                        mobile: this.mobileno,
+                        password: this.password
+                    })
+                } catch (e) {
                     console.log(e);
                 }
                 if (res.data.success) {
-                    this.$router.push({path: 'login'});
-                }
-                else {
+                    this.setTentNum();
+                    this.$router.push({
+                        path: 'login'
+                    });
+                } else {
                     console.log(res.data);
                     this.$toast.show(res.data.message, {
-                    theme: 'bubble',
-                    position: 'top-right',
-                    duration: 3000,
-                    icon: 'error',
-                    type: 'error'
-                });
+                        theme: 'bubble',
+                        position: 'top-right',
+                        duration: 3000,
+                        icon: 'error',
+                        type: 'error'
+                    });
                 }
-            }
-            else {
+            } else {
                 this.$toast.show("Please enter the fields properly", {
                     theme: 'bubble',
                     position: 'top-right',
@@ -111,7 +122,7 @@ export default {
                     type: 'error'
                 });
             }
-            
+
         }
     },
 
@@ -172,7 +183,7 @@ export default {
     box-shadow: var(--box-shadow-1);
 }
 
-.login-form .form-input + .input-sub {
+.login-form .form-input+.input-sub {
     margin-bottom: 1.5rem;
 }
 

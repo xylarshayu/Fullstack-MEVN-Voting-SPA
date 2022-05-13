@@ -1,10 +1,14 @@
 export const state = () => ({
-    dark: false
+    dark: false,
+    tentnum: "9999999999",
 })
 
 export const mutations =  {
     DARK_TOGGLE(state) {
         state.dark = !state.dark;
+    },
+    SET_TENTATIVE_NUMBER(state, x) {
+        state.tentum = x;
     }
 }
 
@@ -17,10 +21,11 @@ export const actions = {
     },
     switchTheme({commit , state}){
         commit('DARK_TOGGLE');
-        this.$auth.$storage.setCookie('darkMode', state.dark, false);
+        this.$auth.$storage.setCookie('darkMode', state.dark);
     }
 }
 
 export const getters = {
-    get_dark: state => state.dark
+    get_dark: state => state.dark,
+    get_tentnum: state => state.tentnum
 }

@@ -97,6 +97,7 @@ export default {
             stage: 1,
             passwordTry: undefined,
             email: undefined,
+            confirmedemail: undefined,
             password: undefined,
             id: undefined,
             mobile: "8506046684",
@@ -132,7 +133,7 @@ export default {
                 this.stage = 1;
             }
         },
-        nextStage(x) {
+        async nextStage(x) {
             console.log(x);
             let error = undefined;
             if (x == 2) {
@@ -150,8 +151,29 @@ export default {
                         break;
                     }
                 }
-            }
-            else if (x == 3) {
+                if (this.email != this.confirmedemail) {
+                    let res = await this.$axios.$get('/api/users/exists/email', {
+                        params: {
+                            id: this.email
+                        }
+                    });
+                    console.log(res);
+                    if (res) {
+                        this.$toast.show("Email registered for this account already", {
+                            theme: 'bubble',
+                            position: 'top-right',
+                            duration: 6000,
+                            icon: 'error',
+                            type: 'error'
+                        });
+                        return;
+                    }
+                    else {
+                        this.confirmedemail = this.email;
+                    }
+                }
+
+            } else if (x == 3) {
                 if (this.password != this.passwordTry) {
                     error = '123123';
                 } else if (!this.country || !this.id) {
@@ -162,13 +184,12 @@ export default {
                 this.$toast.show("Please enter all fields correctly", {
                     theme: 'bubble',
                     position: 'top-right',
-                    duration: 3000,
+                    duration: 6000,
                     icon: 'error',
                     type: 'error'
                 });
                 return;
-            }
-            else {
+            } else {
                 if (x == 2) return this.stage = x;
                 else if (x == 3) {
                     this.stage3go();
@@ -177,12 +198,13 @@ export default {
             }
         },
 
-
         async stage3go() {
-            console.log("breee");
+            this.$nuxt.$loading.start();
             let res = {
                 data: {
-                    success: false
+                    success: false,
+                    mobile: "",
+                    message: ""
                 }
             };
             try {
@@ -197,11 +219,28 @@ export default {
                 console.log("Exception ", e);
             }
             if (res.data.success) {
-                this.mobile = res.data.mobile;
+                let checkmobres = await this.$axios.$get('/api/users/exists/mobile', {
+                    params: {
+                        id: res.data.mobile
+                    }
+                });
+                console.log(checkmobres);
+                if (checkmobres) {
+                    this.$toast.show("Mobile registered for this account already", {
+                        theme: 'bubble',
+                        position: 'top-right',
+                        duration: 6000,
+                        icon: 'error',
+                        type: 'error'
+                    });
+                    return;
+                } else {
+                    this.mobile = res.data.mobile;
+                }
                 this.$toast.show(res.data.message, {
                     theme: 'bubble',
                     position: 'top-right',
-                    duration: 3000,
+                    duration: 6000,
                     icon: 'fingerprint',
                     type: 'info'
                 })
@@ -212,7 +251,7 @@ export default {
                 this.$toast.show(res.data.message, {
                     theme: 'bubble',
                     position: 'top-right',
-                    duration: 3000,
+                    duration: 6000,
                     icon: 'error',
                     type: 'error'
                 })
@@ -240,10 +279,11 @@ export default {
                 } catch (error) {
                     console.log("Exception ", error);
                 }
+                this.$nuxt.$loading.finish();
                 this.$toast.show(res.data.message, {
                     theme: res.data.success ? 'toasted-primary' : 'bubble',
                     position: 'bottom-right',
-                    duration: 3000,
+                    duration: 6000,
                     icon: res.data.success ? 'timer' : 'sms_failed',
                     type: res.data.success ? 'info' : 'error'
                 })
@@ -272,10 +312,11 @@ export default {
                 } catch (error) {
                     console.log("Exception ", error);
                 }
+                this.$nuxt.$loading.finish();
                 this.$toast.show(res.data.message, {
                     theme: res.data.success ? 'toasted-primary' : 'bubble',
                     position: 'bottom-right',
-                    duration: 3000,
+                    duration: 6000,
                     icon: res.data.success ? 'timer' : 'sms_failed',
                     type: res.data.success ? 'info' : 'error'
                 })

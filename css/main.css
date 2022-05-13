@@ -1,12 +1,14 @@
 :root {
-  --primary-color: rgb(255, 183, 66);
+  --primary-color: #ffb742;
   --primary-color-2: rgb(255, 154, 1);
   --muted-primary-1: #E68E00;
   --muted-primary-2: #B86900;
   --secondary-color: #00a0ff;
   --secondary-color-2: #66c4f9;
-  --black-bg-color: rgb(17, 18, 19);
+  --black-bg-color: #111213;
   --white-bg-color: #F0F7F4;
+  --black-transparent-color: rgba(17, 18, 19, 0.5);
+  --white-transparent-color: rgba(240, 247, 244, 0.5);
   --grey-darker: rgb(24, 40, 53);
   --grey-darkest: rgb(6, 11, 14);
   --grey-mid: #2B4860;
@@ -166,7 +168,7 @@ select option {
   font-style: normal;
   font-weight: bold;
   letter-spacing: 0.045em;
-  color: white;
+  color: inherit;
   font-size: 2.5rem;
   line-height: 150%;
   width: 100%;
@@ -189,11 +191,11 @@ select option {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 32px;
+  font-size: 2rem;
   line-height: 140%;
   /* identical to box height, or 45px */
   letter-spacing: 0.025em;
-  color: white;
+  color: inherit;
 }
 
 .h2Font {
@@ -201,10 +203,10 @@ select option {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 140%;
   /* identical to box height, or 34px */
-  color: white;
+  color: inherit;
 }
 
 .h3Font {
@@ -212,11 +214,11 @@ select option {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 22.4px;
+  font-size: 1.4rem;
   line-height: 140%;
   /* or 31px */
   letter-spacing: 0.025em;
-  color: white;
+  color: inherit;
 }
 
 .h4Font {
@@ -224,10 +226,10 @@ select option {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 19.2px;
-  line-height: 32px;
+  font-size: 1.2rem;
+  line-height: 2rem;
   /* identical to box height, or 167% */
-  color: white;
+  color: inherit;
 }
 
 .baseFont {
@@ -235,10 +237,10 @@ select option {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 150%;
   /* identical to box height, or 24px */
-  color: white;
+  color: inherit;
 }
 
 .subBaseFont {
@@ -246,7 +248,7 @@ select option {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
-  font-size: 14.88px;
+  font-size: 0.93rem;
   line-height: 150%;
   /* or 22px */
 }
@@ -256,7 +258,7 @@ select option {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 150%;
   /* identical to box height, or 18px */
   letter-spacing: 0.1em;
@@ -275,19 +277,18 @@ select option {
 }
 
 .styled-scrollbar {
-  scrollbar-color: var(--grey-darker) var(--grey-darkest);
+  scrollbar-color: var(--menu-color-5) var(--menu-color);
   scrollbar-width: thin;
-  overflow-y: scroll;
 }
 
 .styled-scrollbar::-webkit-scrollbar {
-  width: 0.5rem;
-  background-color: var(--grey-darkest);
+  width: 0.1rem;
+  background-color: var(--menu-color-5);
 }
 
 .styled-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--grey-darker);
-  border-radius: 2rem;
+  background-color: var(--menu-color);
+  border-radius: 0.05rem;
   transition: background-color 1s linear;
   
 }
@@ -359,7 +360,7 @@ select option {
 }
 
 .grey-button-text {
-  color: var(--subtext-color);
+  color: var(--subtext-color) !important;
   transition: color 0.1s ease-in-out;
 }
 
@@ -435,6 +436,7 @@ select option {
   background: inherit;
   color: inherit;
 }
+
 
 .lineHeight35 {
   line-height: 35px;

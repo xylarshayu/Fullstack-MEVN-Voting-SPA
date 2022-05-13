@@ -7,6 +7,24 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/user.model');
 const otpModel = require('../models/otp.model');
 
+router.get('/exists/:type', async (req, res) => {
+	try {
+		let type = req.params.type;
+		let id = req.query.id;
+		console.log("Params:\n", req.params);
+		console.log("Query:\n", req.query);
+		let thisUser = await userModel.findOne({ [type]: id })
+		if (thisUser) return res.send(true);
+		else return res.send(false);
+	}
+	catch (e) {
+		console.log("Existence check exception:\n", e);
+		res.send("Internal Server Error");
+	}
+
+
+})
+
 router.post('/signup', checkotp, async (req, res) => {
 	try {
 		let mobile = req.body.mobile;
@@ -23,7 +41,7 @@ router.post('/signup', checkotp, async (req, res) => {
 			success: false,
 			message: "User already exists with this email"
 		});
-		let newUser = new userModel({ 
+		let newUser = new userModel({
 			mobile: mobile,
 			email: email,
 			password: pass,
@@ -35,7 +53,7 @@ router.post('/signup', checkotp, async (req, res) => {
 			success: true,
 			message: "Welcome to Voter-Space"
 		});
-		
+
 	} catch (error) {
 		console.log("Exception users/signup", error);
 		res.json({
@@ -74,7 +92,7 @@ router.post('/pre-login', async (req, res) => {
 	try {
 		let mobile = req.body.mobile;
 		let pass = req.body.password;
-		let thisUser = await userModel.findOne({'mobile' : mobile}, 'password');
+		let thisUser = await userModel.findOne({ 'mobile': mobile }, 'password');
 		if (!thisUser) return res.json({
 			success: false,
 			message: "User doesn't exist"
@@ -116,7 +134,7 @@ router.post('/login', checkotp, async (req, res) => {
 	}
 })
 
-router.post('/logout', async(req, res) => {
+router.post('/logout', async (req, res) => {
 	try {
 		let mobile = req.body.mobile;
 		let thisUser = await userModel.findOne({ 'mobile': mobile }, 'refresh_token');
@@ -134,6 +152,26 @@ router.post('/logout', async(req, res) => {
 		console.log("Exception logout error:\n", error);
 		res.status(500).send("Internal Server Error");
 	}
+})
+
+router.post('/getuser', auth, async (req, res) => {
+	try {
+		let user = req.user;
+		let thisUser = await userModel.findOne({ _id: user._id }, 'mobile');
+		if (!thisUser) return res.json({
+			success: false,
+			message: "User may not exist"
+		});
+		res.json({
+			success: true,
+			message: "User Gotten",
+			mobile: thisUser.mobile
+		})
+	}
+	catch (error) {
+		console.log("Exception getuser:\n", error);
+	}
+
 })
 
 

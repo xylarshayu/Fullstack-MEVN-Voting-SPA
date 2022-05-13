@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :class="grey ? 'grey-button-text':''">
     {{secondsShow}}s
 </div>
 </template>
@@ -8,6 +8,7 @@
 export default {
     props: {
         date: null,
+        grey: false,
     },
     data() {
         return {
@@ -43,4 +44,5 @@ div {
     display: inline-block;
     color: var(--text-color);
 }
+
 </style>

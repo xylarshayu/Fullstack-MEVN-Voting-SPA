@@ -1,6 +1,19 @@
 export default {
+
+  loading: {
+    color: "#00a0ff",
+    height: "3px",
+    continuous: true,
+  },
+
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
+
+  loadingIndicator: {
+    name: 'rotating-plane',
+    color: 'rgb(255, 183, 66)',
+    background: 'black',
+  },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -47,7 +60,38 @@ export default {
     '@nuxtjs/auth-next'
   ],
 
+  auth: {
+    redirect: {
+      login: '/',
+      logout: '/',
+      home: '/home',
 
+    },
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'access_token',
+          max_age: '60*60*4',
+          global: false
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: '60*60*24'
+        },
+        user: {
+          property: 'mobile'
+        },
+        endpoints: {
+          login: { url: '/api/users/login', method: 'post'},
+          refresh: { url: '/api/users/refresh-token', method: 'post'},
+          user: { url: '/api/users/getuser', method: 'post'},
+          logout: { url: '/api/users/logout', method: 'post'}
+        }
+      }
+    }
+  },
 
   axios: {
     credentials: false,

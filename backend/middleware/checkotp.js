@@ -5,13 +5,13 @@ let otpVerify = async (req, res, next) => {
         let mobile = req.body.mobile;
         let email = req.body.email;
         let otp = req.body.otp;
-        let thisOtp = undefined;
-        if (mobile) {
+        let thisOtp = await otpModel.findOne({$or: [{email: email}, {mobile: mobile}]}, 'otp');
+        /* if (mobile) {
             thisOtp = await otpModel.findOne({ 'mobile': mobile }, 'otp');
         }
         else {
             thisOtp = await otpModel.findOne({ 'email': email }, 'otp');
-        }
+        } */
         if (!thisOtp) return res.status(403).json({ 
             success: false,
             message: "No OTP Registered"
