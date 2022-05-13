@@ -7,19 +7,19 @@
             Ballots
         </div>
 
-        <div class="h2Font" data-aos="fade-up" data-aos-delay="100" v-if="$auth.loggedin">
+        <div class="h2Font" data-aos="fade-up" data-aos-delay="100" v-if="$auth.loggedIn">
             Your Choices Here Will Make A Difference
         </div>
 
-        <div class="baseFont" data-aos="fade" data-aos-duration="1000" data-aos-delay="400" v-if="$auth.loggedin">
+        <div class="baseFont" data-aos="fade" data-aos-duration="1000" data-aos-delay="400" v-if="$auth.loggedIn">
             So Choose Wisely.
         </div>
         
-        <div class="h2Font" data-aos="fade-up" data-aos-delay="100" v-if="!$auth.loggedin">
+        <div class="h2Font" data-aos="fade-up" data-aos-delay="100" v-if="!$auth.loggedIn">
             Here We Choose Our Future
         </div>
 
-        <nuxt-link to="registration" data-aos="fade" data-aos-duration="1000" data-aos-delay="400" class="baseFont" v-if="!$auth.loggedin">
+        <nuxt-link to="registration" data-aos="fade" data-aos-duration="1000" data-aos-delay="400" class="baseFont" v-if="!$auth.loggedIn">
             Join Us.
         </nuxt-link>
 
@@ -29,10 +29,10 @@
 
     <div class="voting-space-cards column align-center width100">
 
-        <votespacecard color="red" title="Indian General Election" class="marginB30" subtitle="Election for the Prime Minister of India" />
-        <votespacecard color="green" title="College Student Issue" class="marginB30" subtitle="Should Attendance Requirements Be Necessary?" votetype="POLL"/>
-        <votespacecard color="blue" title="Skateboard Stuff 🛹" class="marginB30" subtitle="How costly should a low end skateboard model be?" votetype="POLL" />
-        <votespacecard color="purple" title="Project Approval" class="marginB30" subtitle="Would you say this project was good? 👀" votetype="POLL"/>
+        <votespacecard color="red" title="Indian General Election" class="page-vote-card" subtitle="Election for the Prime Minister of India" />
+        <votespacecard color="green" title="College Student Issue" class="page-vote-card" subtitle="Should Attendance Requirements Be Necessary?" votetype="POLL"/>
+        <votespacecard color="blue" title="National Voting Method 🗳" class="page-vote-card" subtitle="Election for Choosing Ideal Method For Collecting Votes" votetype="ELECTION" />
+        <votespacecard color="purple" title="Project Approval" class="page-vote-card" subtitle="Would you say this project was good? 👀" votetype="POLL" votelevel="GLOBAL"/>
 
     </div>
 
@@ -103,6 +103,10 @@ export default {
 
 .voting-space-cards {
     padding: 20vh 0;
+}
+
+.page-vote-card {
+    margin: 5vh 0;
 }
 
 </style>

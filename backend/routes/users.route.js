@@ -64,16 +64,40 @@ router.post('/signup', checkotp, async (req, res) => {
 
 })
 
-router.post('/refresh-token', auth, async (req, res) => {
+router.post('/refresh-token', async (req, res) => {
 	try {
-
+		let refresh_token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
+		try {
+			if (refresh_token == null) return res.json({
+				success: false,
+				message: "Token Not Provided"
+			})
+			jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET, {algorithms: ['HS256']}, (err, payload) => {
+				if (err) {
+					console.log("Refresh Token Exceeption during auth:\n", err);
+					return res.json({
+						success: false,
+						message: "Invalid Token"
+					})
+				}
+				if(!mongoose.isValidObjectId(payload._id)) return res.status(403).json({
+					success: false,
+					message: 'Error in user id at authentication'
+				});
+				req.user = payload;
+			})
+		}
+		catch (error) {
+			console.log("Refresh Token Exceeption during auth 1:\n", error);
+			return res.status(500).send("");
+		}
 		let user = req.user;
 		let thisUser = await userModel.findOne({ _id: user._id }, 'refresh_token');
 		console.log(thisUser);
 		if (!thisUser) return res.status(501).json({ error: 'Internal Server Error 1' });
 		if (!(thisUser.refresh_token)) return res.status(501).json({ error: 'Internal Server Error' });
 
-		const refresh_token = req.headers['authorization'].split(' ')[1];
+		
 		if (thisUser.refresh_token === refresh_token) {
 
 			let access_token = thisUser.generateAccessToken();
@@ -114,19 +138,20 @@ router.post('/pre-login', async (req, res) => {
 
 router.post('/login', checkotp, async (req, res) => {
 	try {
+		console.log(req.body.otp);
 		let mobile = req.body.mobile;
 		let thisUser = await userModel.findOne({ 'mobile': mobile }, 'mobile, refresh_token');
-		if (!thisUser) return res.send("User not signed up.");
+		if (!thisUser) return res.status(400).send("User not signed up.");
 		let access_token = thisUser.generateAccessToken();
 		let refresh_token = thisUser.generateRefreshToken();
-		let new_tokens = {
-			"auth": access_token,
-			"refresh": refresh_token,
-		}
 		thisUser.refresh_token = refresh_token;
 		thisUser = await thisUser.save();
 		console.log("User and refresh token ", thisUser);
-		res.json(new_tokens);
+		res.json({
+			success: true,
+			access_token: access_token,
+			refresh_token: refresh_token
+		});
 	}
 	catch (error) {
 		console.log("Exception login error:\n", error);

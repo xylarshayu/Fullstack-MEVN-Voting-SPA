@@ -8,7 +8,7 @@ export const mutations =  {
         state.dark = !state.dark;
     },
     SET_TENTATIVE_NUMBER(state, x) {
-        state.tentum = x;
+        state.tentnum = x;
     }
 }
 

@@ -72,8 +72,7 @@ export default {
         scheme: 'refresh',
         token: {
           property: 'access_token',
-          max_age: '60*60*4',
-          global: false
+          max_age: '60*60*4'
         },
         refreshToken: {
           property: 'refresh_token',

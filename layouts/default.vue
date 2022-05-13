@@ -105,27 +105,27 @@
         </nuxt-link>
 
         <div class="nav-buttons row justify-space-around align-center">
-            <nuxt-link to="/settings" class="material-symbols-rounded row justify-center align-center" v-if="$auth.loggedin">
+            <nuxt-link to="/settings" class="material-symbols-rounded row justify-center align-center pointer" v-if="$auth.loggedIn">
                 settings
             </nuxt-link>
 
-            <nuxt-link to="/issue" class="material-symbols-rounded row justify-center align-center" v-else>
+            <nuxt-link to="/issue" class="material-symbols-rounded row justify-center align-center pointer" v-else>
                 report
             </nuxt-link>
 
-            <nuxt-link to="/home" class="material-symbols-rounded row justify-center align-center">
+            <nuxt-link to="/home" class="material-symbols-rounded row justify-center align-center pointer">
                 home
             </nuxt-link>
 
-            <div to="/settings" class="material-symbols-rounded row justify-center align-center" @click="darkToggle">
+            <div to="/settings" class="material-symbols-rounded row justify-center align-center pointer" @click="darkToggle">
                 {{theme}}
             </div>
 
-            <div class="material-symbols-rounded row justify-center align-center logout" v-if="$auth.loggedin">
+            <div class="material-symbols-rounded row justify-center align-center logout pointer" v-if="$auth.loggedIn" @click="logout">
                 logout
             </div>
 
-            <nuxt-link to="/" class="material-symbols-rounded row justify-center align-center" v-else>
+            <nuxt-link to="/" class="material-symbols-rounded row justify-center align-center pointer" v-else>
                 person
             </nuxt-link>
         </div>
@@ -190,6 +190,10 @@ export default {
         checkScrolled() {
             this.hasScrolled = (window.scrollY > 50);
             console.log("Z");
+        },
+        async logout() {
+            await this.$auth.logout({data: { mobile: this.$auth.user}});
+            this.$router.push({path: '/', query: {to: "loggedout"}});
         }
     },
     destroyed() {

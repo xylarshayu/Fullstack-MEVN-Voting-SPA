@@ -4,11 +4,7 @@ const mongoose = require('mongoose');
 
 let authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const typeHeader = req.headers['token-type'];
     let str = process.env.TOKEN_SECRET;
-    if (typeHeader && typeHeader == 'refresh'){
-      str = process.env.REFRESH_TOKEN_SECRET;
-    }
     //console.log(authHeader);
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.status(401).json({

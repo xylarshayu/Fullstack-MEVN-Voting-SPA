@@ -49,7 +49,7 @@
             <myInput v-model="mobileOTP" type="number" icon="phonelink_lock" :placeholder="'OTP Sent on '+numberHint" class="form-input" />
             <div :class="mobResendClickable ? 'opacity0' : '' " class="opacity-transition row align-center">
                 In &nbsp;
-                <myCountdown :date="timeRemMob" :key="'mob_otp_time'+timeRemMob" @onFinish="mobResendClickable = true" @click="mobResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
+                <myCountdown :date="timeRemMob" :key="'mob_otp_time'+timeRemMob" @onFinish="mobResendClickable = true" /> <span class="material-icons-outlined"> chevron_right </span>
             </div>
             <div class="button center-strict" :class="mobResendClickable ? 'pointer':'disabled-button'" @click="mobResendFunc">
                 Resend
@@ -61,7 +61,7 @@
             <myInput v-model="emailOTP" type="number" icon="mail_lock" placeholder="OTP Sent on Email" class="form-input" />
             <div :class="emailResendClickable ? 'opacity0' : '' " class="opacity-transition row align-center">
                 In &nbsp;
-                <myCountdown :date="timeRemEmail" :key="'email_otp_time'+timeRemEmail" @onFinish="emailResendClickable = true" @click="emailResendFunc" /> <span class="material-icons-outlined"> chevron_right </span>
+                <myCountdown :date="timeRemEmail" :key="'email_otp_time'+timeRemEmail" @onFinish="emailResendClickable = true" /> <span class="material-icons-outlined"> chevron_right </span>
             </div>
             <div class="button center-strict" :class="emailResendClickable ? 'pointer':'disabled-button'" @click="emailResendFunc">
                 Resend
@@ -69,7 +69,7 @@
 
         </div>
 
-        <div class="button b1 orange-button center-strict">
+        <div class="button b1 orange-button center-strict" @click="signup">
             Submit
         </div>
 
@@ -80,7 +80,7 @@
 
 <script>
 export default {
-    auth: false,
+    auth: 'guest',
     data() {
         return {
             passwordRules: [
@@ -108,6 +108,7 @@ export default {
             timeRemEmail: undefined,
             mobResendClickable: true,
             emailResendClickable: true,
+            submitclickable: true
 
         }
     },
@@ -167,8 +168,7 @@ export default {
                             type: 'error'
                         });
                         return;
-                    }
-                    else {
+                    } else {
                         this.confirmedemail = this.email;
                     }
                 }
@@ -323,6 +323,100 @@ export default {
                 this.timeRemEmail = Date.now() + 299000;
             }
         },
+
+        async signup() {
+            if (this.submitclickable) {
+                this.submitclickable = false;
+                try {
+                    let res = await this.$axios.post('/api/otps/verifyotp', {
+                        email: this.email,
+                        otp: this.emailOTP
+                    })
+                    if (res.data.success) {
+                        this.$toast.show("Email OTP correct", {
+                            theme: 'toasted-primary',
+                            position: 'top-right',
+                            duration: 6000,
+                            icon: 'check_box',
+                            type: 'success'
+                        })
+                    } else {
+                        this.submitclickable = true;
+                        return this.$toast.show("Email OTP incorrect", {
+                            theme: 'toasted-primary',
+                            position: 'top-right',
+                            duration: 6000,
+                            icon: 'cancel',
+                            type: 'error'
+                        })
+                    }
+                } catch (e) {
+                    this.submitclickable = true;
+                    console.log("Email OTP exception", e);
+                }
+
+                try {
+                    let res = await this.$axios.post('/api/users/signup', {
+                        mobile: this.mobile,
+                        email: this.confirmedemail,
+                        country: this.country,
+                        password: this.password,
+                        otp: this.mobileOTP
+                    })
+                    if (res.data.success) {
+                        this.$toast.show("Mobile OTP correct, Sign Up Successful!", {
+                            theme: 'toasted-primary',
+                            position: 'top-right',
+                            duration: 6000,
+                            icon: 'check_box',
+                            type: 'success'
+                        })
+                    } else {
+                        this.submitclickable = true;
+                        return this.$toast.show("Mobile OTP incorrect", {
+                            theme: 'toasted-primary',
+                            position: 'top-right',
+                            duration: 6000,
+                            icon: 'cancel',
+                            type: 'error'
+                        })
+                    }
+                } catch (e) {
+                    this.submitclickable = true;
+                    console.log("Signup error", e);
+                }
+
+                try {
+                    const res = await this.$auth.loginWith('local', {
+                        data: {
+                            mobile: this.mobile,
+                            otp: this.mobileOTP
+                        }
+                    })
+                    if (res.data.success) {
+                        this.$toast.show("Logged in successfully, welcome to Voter Space", {
+                            theme: 'toasted-primary',
+                            position: 'top-right',
+                            duration: 6000,
+                            icon: 'login',
+                            type: 'success'
+                        })
+                        this.$router.push({
+                            path: '/home'
+                        });
+                    } else {
+                        this.submitclickable = true;
+                        return this.$toast.error("Some error");
+                    }
+
+                } catch (e) {
+                    this.submitclickable = true;
+                    console.log("Login error", e);
+                }
+            }
+
+        }
+
     }
 }
 </script>

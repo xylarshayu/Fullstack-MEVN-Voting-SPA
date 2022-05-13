@@ -45,7 +45,7 @@
 <script>
 export default {
     name: 'IndexPage',
-    auth: false,
+    auth: 'guest',
 
     data() {
         return {
@@ -80,6 +80,7 @@ export default {
 
     methods: {
         setTentNum() {
+            console.log("setTentNum run");
             this.$store.commit('SET_TENTATIVE_NUMBER', this.mobileno);
         },
         async loginmethod() {
@@ -127,6 +128,9 @@ export default {
     },
 
     created() {
+        /* if (this.$auth.loggedIn) {
+            this.$router.replace({path:'/home'});
+        }; */
         this.$nuxt.$emit('page-load', true);
     }
 

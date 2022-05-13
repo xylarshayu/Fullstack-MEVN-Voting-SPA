@@ -19,7 +19,7 @@
         </div>
 
         <div class="button-div row justify-end">
-            <div class="button center-strict" :class="clickable ? '': 'disabled-button'">
+            <div class="button center-strict" :class="clickable ? '': 'disabled-button'" @click="login">
                 Submit
             </div>
         </div>
@@ -31,13 +31,14 @@
 
 <script>
 export default {
-    auth: false,
+    auth: 'guest',
     data() {
         return {
             mobileOTP: undefined,
             mobResendClickable: false,
             timeRemMob: undefined,
             number: undefined,
+            submitclickable: true
         }
     },
     computed: {
@@ -78,6 +79,46 @@ export default {
                 icon: res.data.success ? 'timer' : 'sms_failed',
                 type: res.data.success ? 'info' : 'error'
             })
+        },
+        async login() {
+            if (!this.clickable || !this.submitclickable) return;
+            this.submitclickable = false;
+            try {
+                    const res = await this.$auth.loginWith('local', {data: {
+                            mobile: this.number,
+                            otp: this.mobileOTP
+                        }})
+                            console.log(res);
+                            console.log("BRRRR", this.$auth.loggedIn);
+                            if (res.data.success) {
+                                this.$toast.show("Logged in successfully, welcome to Voter Space", {
+                                    theme: 'toasted-primary',
+                                    position: 'top-right',
+                                    duration: 6000,
+                                    icon: 'login',
+                                    type: 'success'
+                                })
+                                this.$router.push({path:'/home'});
+                            }
+                            else {
+                                this.submitclickable = true;
+                                return
+                            }
+
+                        
+
+                } catch (e) {
+                    this.submitclickable = true;
+                    console.log("Login error", e);
+                    return this.$toast.show("Incorrect OTP", {
+                                    theme: 'toasted-primary',
+                                    position: 'top-right',
+                                    duration: 6000,
+                                    icon: 'cancel',
+                                    type: 'error'
+                    });
+                    
+                }
         }
     }
 

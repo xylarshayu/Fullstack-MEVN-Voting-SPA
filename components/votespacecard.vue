@@ -128,6 +128,7 @@ export default {
 .card-corner {
     position: absolute;
     padding: 1rem;
+    width: 8.61125rem;
     backdrop-filter: brightness(0.5);
     color: white;
     font-weight: 700;
