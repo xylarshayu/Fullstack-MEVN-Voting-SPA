@@ -163,6 +163,36 @@ select option {
   color: var(--grey-text-color-2);
 }
 
+.tooltip {
+  position: relative;
+}
+
+.tooltip::before {
+  background-color: var(--menu-color-3);
+  position: absolute;
+  transition: all 0.2s ease-in-out;
+  content: attr(data-tooltip);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: 0.1em;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  top: calc(110%);
+  width: max-content;
+  text-align: center;
+  transform: scale(0);
+  transform-origin: bottom center;
+}
+
+.tooltip:hover::before {
+  transform: scale(1);
+  transition: all 0.2s ease-in-out;
+}
+
 .pageTitleFont {
   /* Title/D/48 */
   font-family: FontGlobalCitizen;

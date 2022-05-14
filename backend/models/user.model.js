@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema({
     },
     country : String,
     refresh_token : String,
-    password: String
+    password: String,
+    events: {
+        type: Array,
+    }
 });
 
 userSchema.methods.generateAccessToken = function() {

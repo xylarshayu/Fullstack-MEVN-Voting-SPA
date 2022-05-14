@@ -13,9 +13,11 @@ app.use(bodyParser.json());
 const usersRoute = require('./routes/users.route');
 const otpsRoute = require('./routes/otps.route');
 const natRoute = require('./routes/natid.route');
+const voteRoute = require('./routes/vote.route');
 app.use('/api/users', usersRoute);
 app.use('/api/otps', otpsRoute);
 app.use('/api/natid', natRoute);
+app.use('/api/vote', voteRoute);
 
 const port = process.env.PORT;
 

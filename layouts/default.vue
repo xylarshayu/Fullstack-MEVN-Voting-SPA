@@ -1,6 +1,6 @@
 <template>
 <div :style="styleIt" class="default-layout">
-    <header class="row justify-space-between align-center" :class="hasScrolled ? 'header-shifted':''">
+    <header class="row justify-space-between align-center" :class="hasScrolled ? 'header-shifted':''" @click="test">
         <nuxt-link to="/" class="voter-space row align-center">
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 378.11 455.2">
@@ -105,27 +105,27 @@
         </nuxt-link>
 
         <div class="nav-buttons row justify-space-around align-center">
-            <nuxt-link to="/settings" class="material-symbols-rounded row justify-center align-center pointer" v-if="$auth.loggedIn">
+            <nuxt-link to="/settings" class="material-symbols-rounded row justify-center align-center pointer tooltip" data-tooltip="Settings" v-if="$auth.loggedIn">
                 settings
             </nuxt-link>
 
-            <nuxt-link to="/issue" class="material-symbols-rounded row justify-center align-center pointer" v-else>
+            <nuxt-link to="/issue" class="material-symbols-rounded row justify-center align-center pointer tooltip" data-tooltip="Issue" v-else>
                 report
             </nuxt-link>
 
-            <nuxt-link to="/home" class="material-symbols-rounded row justify-center align-center pointer">
+            <nuxt-link to="/home" class="material-symbols-rounded row justify-center align-center pointer tooltip" data-tooltip="Home">
                 home
             </nuxt-link>
 
-            <div to="/settings" class="material-symbols-rounded row justify-center align-center pointer" @click="darkToggle">
+            <div to="/settings" class="material-symbols-rounded row justify-center align-center pointer tooltip" :data-tooltip="theme=='dark_mode' ? 'Toggle dark mode': 'Toggle light  mode'" @click="darkToggle">
                 {{theme}}
             </div>
 
-            <div class="material-symbols-rounded row justify-center align-center logout pointer" v-if="$auth.loggedIn" @click="logout">
+            <div class="material-symbols-rounded row justify-center align-center logout pointer tooltip" :data-tooltip="$auth.user+'👋'" v-if="$auth.loggedIn" @click="logout">
                 logout
             </div>
 
-            <nuxt-link to="/" class="material-symbols-rounded row justify-center align-center pointer" v-else>
+            <nuxt-link to="/" class="material-symbols-rounded row justify-center align-center pointer tooltip" data-tooltip="Login" v-else>
                 person
             </nuxt-link>
         </div>
@@ -136,6 +136,25 @@
 
 <script>
 export default {
+    async asyncData($auth, $axios) {
+        if (!$auth.loggedIn) {
+            try {
+                const { access_token } = await $axios.$post('/api/refresh-token', { headers: { authorization: $auth.strategy.access_token }});
+                $auth.setUserToken(access_token);
+            }
+            catch (err) {
+                console.log("Exception access_token on entry login:\n", err);
+                return;
+            }
+            try {
+                const res = await $auth.fetchUser();
+                console.log(res);
+            }
+            catch(err) {
+                console.log("Exception entry login\n", err);
+            }
+        }
+    },
     data() {
         return {
             hasLogo: false,
@@ -184,12 +203,14 @@ export default {
         this.$store.dispatch('setTheme');
     },
     methods: {
+        test() {
+            console.log(this.$auth.user);
+        },
         darkToggle() {
             this.$store.dispatch('switchTheme');
         },
         checkScrolled() {
             this.hasScrolled = (window.scrollY > 50);
-            console.log("Z");
         },
         async logout() {
             await this.$auth.logout({data: { mobile: this.$auth.user}});

@@ -190,7 +190,8 @@ router.post('/getuser', auth, async (req, res) => {
 		res.json({
 			success: true,
 			message: "User Gotten",
-			mobile: thisUser.mobile
+			mobile: thisUser.mobile,
+			events: thisUser.events
 		})
 	}
 	catch (error) {

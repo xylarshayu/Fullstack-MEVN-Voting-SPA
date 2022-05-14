@@ -31,7 +31,7 @@
 
         <votespacecard color="red" title="Indian General Election" class="page-vote-card" subtitle="Election for the Prime Minister of India" />
         <votespacecard color="green" title="College Student Issue" class="page-vote-card" subtitle="Should Attendance Requirements Be Necessary?" votetype="POLL"/>
-        <votespacecard color="blue" title="National Voting Method 🗳" class="page-vote-card" subtitle="Election for Choosing Ideal Method For Collecting Votes" votetype="ELECTION" />
+        <votespacecard color="blue" title="Recall Election 🏢" class="page-vote-card" subtitle="Election to Determine if Current Party Stays in Office" votetype="ELECTION" />
         <votespacecard color="purple" title="Project Approval" class="page-vote-card" subtitle="Would you say this project was good? 👀" votetype="POLL" votelevel="GLOBAL"/>
 
     </div>
