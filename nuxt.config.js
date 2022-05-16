@@ -80,7 +80,7 @@ export default {
           maxAge: '60*60*24'
         },
         user: {
-          property: 'mobile'
+          property: 'userData'
         },
         endpoints: {
           login: { url: '/api/users/login', method: 'post'},

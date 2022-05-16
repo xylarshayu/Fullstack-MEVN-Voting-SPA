@@ -1,6 +1,7 @@
 export const state = () => ({
     dark: false,
     tentnum: "9999999999",
+    color: "red"
 })
 
 export const mutations =  {
@@ -9,6 +10,9 @@ export const mutations =  {
     },
     SET_TENTATIVE_NUMBER(state, x) {
         state.tentnum = x;
+    },
+    SET_VOTE_PAGE_COLOR(state, x) {
+        state.color = x;
     }
 }
 
@@ -27,5 +31,6 @@ export const actions = {
 
 export const getters = {
     get_dark: state => state.dark,
-    get_tentnum: state => state.tentnum
+    get_tentnum: state => state.tentnum,
+    get_pcolor: state => state.color
 }

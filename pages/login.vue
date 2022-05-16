@@ -1,7 +1,7 @@
 <template>
 <div id="login-page" class="column align-center">
 
-    <div class="container">
+    <div class="container" @keyup.enter="login">
         <div class="page-title h2Font">
             OTP Sent to {{number}}
         </div>

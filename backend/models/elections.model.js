@@ -36,6 +36,14 @@ const electionSchema = new mongoose.Schema({
     },
     lastblock: {
         type: mongoose.Schema.Types.ObjectId,
+    },
+    color: {
+        type: String,
+        default: "red"
+    },
+    description: {
+        type: String,
+        default: ""
     }
 })
 

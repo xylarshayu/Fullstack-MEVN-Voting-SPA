@@ -40,8 +40,6 @@
         {{votedesc}}
     </div>
 
-
-
 </div>
 
 </template>
@@ -101,6 +99,11 @@ export default {
                 "--purple-card": this.isDarkMode ? "#944bbb" : "#52489c",
                 "--card-color": "var(--" + this.color + "-card)"
             }
+        }
+    },
+    methods: {
+        gotoCard(route) {
+            this.$router.push({path: "/", params: {route}});
         }
     }
 }

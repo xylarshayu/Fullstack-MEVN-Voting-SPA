@@ -20,6 +20,20 @@ router.get('/fetch-all', async (req, res) => {
     }
 })
 
+router.get('/fetch-election/:election', async (req, res) => {
+    try {
+        let event = req.params.election;
+        console.log(req.params.election);
+        let payload = await electionModel.findOne({event: event});
+        console.log("Election Fetched\n", payload);
+        res.send(payload);
+    }
+    catch (error) {
+        console.log("Fetch All Exception:\n", error);
+        res.send("Didn't work");
+    }
+})
+
 router.post('/add-election', async (req, res) => {
     try {
         let key = req.body.key;
@@ -30,7 +44,9 @@ router.post('/add-election', async (req, res) => {
                 voteend: req.body.voteend,
                 votelevel: req.body.votelevel,
                 votetype: req.body.votetype,
-                subtitle: req.body.subtitle
+                subtitle: req.body.subtitle,
+                color: req.body.color,
+                description: req.body.description
             })
             newElection = await newElection.save();
             console.log("Saved Election Successfully");
@@ -74,12 +90,16 @@ router.post('/initialize-block', async (req, res) => {
 
 router.post('/add-vote', auth, async (req, res) => {
     try {
+        console.log(req.body);
         let event = req.body.event;
         let mobile = req.body.mobile;
         let choice = req.body.choice;
         let doesItExist = await voteModel.findOne({event: event, mobile: mobile});
         if (doesItExist) {
-            return res.send("Already voted!");
+            console.log("Already exists");
+            return res.json({
+                message: "Already Voted!"
+            });
         }
         let election = await electionModel.findOne({event: event}, 'lastblock');
         let prev_block = await voteModel.findById(election.lastblock);
@@ -97,7 +117,8 @@ router.post('/add-vote', auth, async (req, res) => {
         election.lastblock = lastblock;
         election = await election.save();
         let user = await userModel.findOne({mobile: mobile}, 'events');
-        user.events = user.events.push(event);
+        user.events.push(event);
+        console.log(user.events);
         user = await user.save();
         res.json({
             newBlock: newBlock,
@@ -115,6 +136,7 @@ router.get('/fetch-vote/:event/:mobile', auth, async (req, res) => {
     try {
         let mobile = req.params.mobile;
         let event = req.params.event;
+        event = event.replace("%", " ");
         let vote = await voteModel.findOne({event: event, mobile: mobile}, '_id choice created');
         if (vote) {
             return res.json({
@@ -142,25 +164,27 @@ router.get('/blockchain/:event', async (req, res) => {
         let event = req.params.event;
         let election = await electionModel.findOne({event: event}, 'lastblock');
         console.log("Election:\n", election);
-        let lastblock =  await voteModel.findById({_id: election.lastblock}, 'hash prev_hash choice');
+        let lastblock =  await voteModel.findById({_id: election.lastblock}, 'hash prev_hash choice _id');
         blockchain.push({
             hash: lastblock.hash,
             prev_hash: lastblock.prev_hash,
-            choice: lastblock.choice
+            choice: lastblock.choice,
+            id: lastblock._id
         });
         console.log(lastblock);
         let block = lastblock;
         let prev_hash = lastblock.prev_hash;
         while (true) {
-            block = await voteModel.findOne({hash: prev_hash}, 'hash prev_hash choice');
+            block = await voteModel.findOne({hash: prev_hash}, 'hash prev_hash choice _id');
             if (!block) {
                 break;
             }
             prev_hash = block.prev_hash;
             blockchain.push({
-                hash: hash,
+                hash: block.hash,
                 prev_hash: block.prev_hash,
-                choice: block.choice
+                choice: block.choice,
+                id: block._id
             });
         }
         return res.json({

@@ -82,7 +82,7 @@ router.post('/refresh-token', async (req, res) => {
 				}
 				if(!mongoose.isValidObjectId(payload._id)) return res.status(403).json({
 					success: false,
-					message: 'Error in user id at authentication'
+					message: 'Error in user id at refresh authentication'
 				});
 				req.user = payload;
 			})
@@ -182,16 +182,19 @@ router.post('/logout', async (req, res) => {
 router.post('/getuser', auth, async (req, res) => {
 	try {
 		let user = req.user;
-		let thisUser = await userModel.findOne({ _id: user._id }, 'mobile');
+		let thisUser = await userModel.findOne({ _id: user._id }, 'mobile events');
 		if (!thisUser) return res.json({
 			success: false,
 			message: "User may not exist"
 		});
+		console.log(thisUser.events);
 		res.json({
 			success: true,
 			message: "User Gotten",
-			mobile: thisUser.mobile,
-			events: thisUser.events
+			userData: {
+				mobile: thisUser.mobile,
+				events: thisUser.events
+			}
 		})
 	}
 	catch (error) {

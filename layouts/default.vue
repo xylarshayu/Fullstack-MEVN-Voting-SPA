@@ -121,7 +121,7 @@
                 {{theme}}
             </div>
 
-            <div class="material-symbols-rounded row justify-center align-center logout pointer tooltip" :data-tooltip="$auth.user+'👋'" v-if="$auth.loggedIn" @click="logout">
+            <div class="material-symbols-rounded row justify-center align-center logout pointer tooltip" :data-tooltip="$auth.user.mobile+'👋'" v-if="$auth.loggedIn" @click="logout">
                 logout
             </div>
 
@@ -204,7 +204,7 @@ export default {
     },
     methods: {
         test() {
-            console.log(this.$auth.user);
+            console.log(this.$auth.user.events);
         },
         darkToggle() {
             this.$store.dispatch('switchTheme');
@@ -213,7 +213,7 @@ export default {
             this.hasScrolled = (window.scrollY > 50);
         },
         async logout() {
-            await this.$auth.logout({data: { mobile: this.$auth.user}});
+            await this.$auth.logout({data: { mobile: this.$auth.user.mobile}});
             this.$router.push({path: '/', query: {to: "loggedout"}});
         }
     },

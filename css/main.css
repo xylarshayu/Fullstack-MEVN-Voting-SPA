@@ -163,7 +163,7 @@ select option {
   color: var(--grey-text-color-2);
 }
 
-.tooltip {
+.tooltip, .tooltip2 {
   position: relative;
 }
 
@@ -188,7 +188,29 @@ select option {
   transform-origin: bottom center;
 }
 
-.tooltip:hover::before {
+.tooltip2::before {
+  background-color: var(--menu-color-3);
+  position: absolute;
+  transition: all 0.2s ease-in-out;
+  content: attr(data-tooltip);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: 0.1em;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  top: calc(110%);
+  width: 10rem;
+  min-height: 1.2rem;
+  text-align: start;
+  transform: scale(0);
+  transform-origin: bottom center;
+}
+
+.tooltip:hover::before, .tooltip2:hover::before {
   transform: scale(1);
   transition: all 0.2s ease-in-out;
 }
@@ -236,6 +258,7 @@ select option {
   font-weight: bold;
   font-size: 1.5rem;
   line-height: 140%;
+  letter-spacing: 0.1rem;
   /* identical to box height, or 34px */
   color: inherit;
 }
@@ -266,10 +289,9 @@ select option {
 .baseFont {
   /* Base/D/16 */
   font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
   font-size: 1rem;
   line-height: 150%;
+  font-weight: 100;
   /* identical to box height, or 24px */
   color: inherit;
 }
@@ -293,6 +315,20 @@ select option {
   line-height: 150%;
   /* identical to box height, or 18px */
   letter-spacing: 0.1em;
+}
+
+.page-title-div {
+  color: var(--text-color-2);
+  margin-bottom: 5rem;
+}
+
+.page-title-div .pageTitleFont {
+  font-size: 5rem;
+  color: inherit;
+}
+
+.red-text {
+  color: red !important;
 }
 
 .opacity0 {
