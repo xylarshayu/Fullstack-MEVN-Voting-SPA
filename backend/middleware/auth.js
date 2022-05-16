@@ -12,12 +12,6 @@ let authenticateToken = (req, res, next) => {
       message: "Token not provided"
     });
     jwt.verify(token, str, {algorithms: ['HS256']}, (err, payload) => {
-      
-      /*if(err.name = 'TokenExpiredError')
-      {
-        return res.status(401).json({ error: 'Expired Token, Send Refresh Token' });
-        //console.log(err);
-      }*/
 
       if(err)
       {

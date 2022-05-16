@@ -21,7 +21,7 @@
                 Hash: {{i.hash}}
             </div>
             <div class="blockchoice">
-                {{choices[i.choice] || 'Gensis'}}
+                {{choices[i.choice] || 'Genesis'}}
             </div>
         </div>
     </div>

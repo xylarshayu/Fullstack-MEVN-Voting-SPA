@@ -204,7 +204,7 @@ export default {
     },
     methods: {
         test() {
-            console.log(this.$auth.user.events);
+            
         },
         darkToggle() {
             this.$store.dispatch('switchTheme');

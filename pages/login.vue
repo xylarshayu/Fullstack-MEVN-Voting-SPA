@@ -47,7 +47,7 @@ export default {
             if (this.mobileOTP) {
                 k = this.mobileOTP.toString()
             }
-            return (k.length > 3);
+            return (k.length > 0);
         }
     },
     mounted() {
