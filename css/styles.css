@@ -434,11 +434,11 @@ label {
   position: absolute;
 }
 
-.text-center {
+.text-align-center {
   text-align: center;
 }
 
-.text-right {
+.text-align-right {
   text-align: right;
 }
 
@@ -572,16 +572,8 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   display: none !important;
 }
 
-.fixed {
-  position: sticky;
-}
-
-.relative {
-  position: relative;
-}
-
 /**************************************** MEDIA QUERIES ************************************************* */
-/* xs */
+/* xs (roughly) */
 @media only screen and (max-width: 600px) {
 
   html,
@@ -602,8 +594,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     font-weight: bold;
     font-size: 36px;
     line-height: 130%;
-    /* identical to box height, or 47px */
-    color: white;
   }
 
   .h1Font {
@@ -613,8 +603,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     font-weight: bold;
     font-size: 24px;
     line-height: 140%;
-    /* identical to box height, or 34px */
-    color: white;
   }
 
   .h2Font {
@@ -624,8 +612,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     font-weight: bold;
     font-size: 18px;
     line-height: 140%;
-    /* or 25px */
-    color: white;
   }
 
   .h3Font {
@@ -635,8 +621,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     font-weight: bold;
     font-size: 16.8px;
     line-height: 38px;
-    /* identical to box height, or 226% */
-    color: white;
   }
 
   .h4Font {
@@ -646,8 +630,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     font-weight: bold;
     font-size: 14.4px;
     line-height: 32px;
-    /* identical to box height, or 222% */
-    color: white;
   }
 
   .baseFont {
@@ -657,8 +639,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     font-weight: normal;
     font-size: 12px;
     line-height: 150%;
-    /* identical to box height, or 18px */
-    color: white;
   }
 
   .subBaseFont {
@@ -668,8 +648,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     font-weight: normal;
     font-size: 11.16px;
     line-height: 150%;
-    /* identical to box height, or 17px */
-    color: white;
   }
 
   .smallFont {
@@ -681,7 +659,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     line-height: 150%;
     /* identical to box height, or 13px */
     letter-spacing: 0.03em;
-    color: white;
   }
 
   .row-xs {
@@ -767,56 +744,43 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 
 }
 
-/* sm  */
-@media only screen and (min-width: 961px) and (max-width: 1080px) {
+/* sm (roughly)  */
+@media only screen and (min-width: 601px) and (max-width: 1080px) {
 
   .h1 {
-    color: #1C1C28, 100%;
     font-weight: bold;
     font-size: 40px;
     line-height: 54px;
   }
 
   .h2 {
-    color: #1C1C28, 100%;
     font-weight: bold;
     font-size: 32px;
     line-height: 44px;
   }
 
   .h3 {
-    color: #1C1C28, 100%;
     font-weight: bold;
     font-size: 28px;
     line-height: 38px;
   }
 
   .h4 {
-    color: #1C1C28, 100%;
     font-weight: bold;
     font-size: 24px;
     line-height: 32px;
   }
 
   .h5 {
-    color: #1C1C28, 100%;
     font-weight: bold;
     font-size: 20px;
     line-height: 28px;
   }
 
   .h6 {
-    color: #1C1C28, 100%;
     font-weight: bold;
     font-size: 16px;
     line-height: 22px;
-  }
-
-  .lead {
-    color: #1C1C28, 100%;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 24px;
   }
 
   html,

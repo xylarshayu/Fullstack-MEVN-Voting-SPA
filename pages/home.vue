@@ -7,7 +7,7 @@
             Ballots
         </div>
 
-        <div class="h2Font" data-aos="fade-up" data-aos-delay="100" v-if="$auth.loggedIn">
+        <div class="h2Font text-align-center" data-aos="fade-up" data-aos-delay="100" v-if="$auth.loggedIn">
             Your Choices Here Will Make A Difference
         </div>
 
@@ -123,11 +123,11 @@ export default {
 
 
 .voting-space-cards {
-    padding: 20vh 0;
+    padding: 60px 0;
 }
 
 .page-vote-card {
-    margin: 5vh 0;
+    margin: 30px 0;
 }
 
 </style>

@@ -94,11 +94,11 @@
                 </g>
             </svg>
 
-            <div>
+            <div class="hide-xs">
                 VOTER
             </div>
 
-            <div>
+            <div class="hide-xs">
                 SPACE
             </div>
 
@@ -235,6 +235,7 @@ header {
     overflow: visible;
     box-shadow: none;
     filter: brightness(1);
+    padding: 0 1rem;
     transition: all 0.3s ease-in-out;
 }
 
@@ -255,7 +256,6 @@ header.header-shifted {
 .voter-space svg {
     height: 32px;
     width: auto;
-    margin-left: 1rem;
     overflow: visible;
 }
 
@@ -284,14 +284,10 @@ header.header-shifted {
     margin-left: 4px;
 }
 
-.nav-buttons {
-    margin-right: 0.8rem;
-}
-
 .nav-buttons .material-symbols-rounded,
 .nav-buttons div {
     font-size: 2rem;
-    margin-right: 1rem;
+    margin-left: 1rem;
     color: var(--text-color);
     text-shadow: var(--box-shadow-1);
     transition: all 0.2s ease-in-out;

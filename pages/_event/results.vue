@@ -13,7 +13,7 @@
     </div>
 
     <div class="blocks column align-center">
-        <div class="a-block row" v-for="i in blockchain" :key="i.id" :class="i.id == blockRes.id ? 'your-block':''">
+        <div class="a-block row column-xs column-sm" v-for="i in blockchain" :key="i.id" :class="i.id == blockRes.id ? 'your-block':''">
             <div class="block-id">
                 {{i.id}}
             </div>
@@ -126,7 +126,26 @@ export default {
     color: var(--white-bg-color);
     background-color: var(--blue-against-dark-text-color);
     text-align: center;
-    width: 10%;
+    min-width: 10%;
+}
+
+@media only screen and (max-width: 1080px) {
+
+  .this-hash, .block-id, .block-choice {
+    width: 100%;
+  }
+
+  .results-page {
+    padding-top: 10vh;
+  }
+
+}
+
+@media only screen and (max-width: 600px) {
+  .this-hash {
+    font-size: 8px;
+    height: 1.5rem;
+  }
 }
 
 </style>

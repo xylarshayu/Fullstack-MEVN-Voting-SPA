@@ -28,11 +28,11 @@
         {{votelevel}}
     </div>
 
-    <div class="vote-title center-strict">
+    <div class="vote-title center-strict text-align-center">
         {{title}}
     </div>
 
-    <div class="vote-subtitle center-strict">
+    <div class="vote-subtitle center-strict text-align-center">
         {{subtitle}}
     </div>
 
@@ -113,7 +113,7 @@ export default {
 
 .voter-space-card {
     background-color: var(--card-color);
-    height: 70vh;
+    height: min(450px, 70vh);
     width: 80vw;
     border-radius: 0 20px 0 20px;
     box-shadow: var(--box-shadow-1);
@@ -178,5 +178,23 @@ export default {
     font-size: 1.5rem;
     font-weight: 200;
 }
+
+@media only screen and (max-width: 600px) {
+
+  .voter-space-card {
+    height: 70vh;
+  }
+
+  .vote-title {
+    line-height: 1.5;
+  }
+
+  .card-corner .material-icons-outlined {
+    font-size: 12px;
+  }
+
+
+}
+
 
 </style>

@@ -1,12 +1,12 @@
 <template>
 <div class="ballot-page" :style="styleIt">
 
-    <div class="page-top-title row width100 align-center justify-center" @click="backToPage">
+    <div class="page-top-title row width100 align-center justify-center hide-xs" @click="backToPage">
         {{event}}
     </div>
 
     <div class="disclaimer width100 column align-center justify-center">
-      🙏<br>Please do your due diligence and research before voting.<br><span class="red">Votes are permanently signed into the blockchain</span>
+      <span class="baseFont show-xs" style="color: var(--card-color);">{{event}}<br></span>🙏<br>Please do your due diligence and research before voting.<br><span class="red">Votes are permanently signed into the blockchain</span>
     </div>
 
     <div class="vote-options row justify-center width100">
@@ -200,7 +200,7 @@ export default {
     box-shadow: var(--box-shadow-3);
     text-align: center;
     height: fit-content;
-    width: 20%;
+    width: 250px;
     border-radius: 1rem;
     color: var(--white-bg-color);
 }

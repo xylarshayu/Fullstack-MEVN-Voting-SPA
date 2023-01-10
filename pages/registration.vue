@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="row justify-space-between page-stage-dots">
+    <div class="row page-stage-dots">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" v-for="i in 3" :key="'page-dot'+i" @click="dotNav(i)">
             <circle :class="stage==i ? 'page-dot-highlighted': i == 3 ? 'page-dot-blocked' : stage == 2 ? 'pointer' : 'page-dot-blocked' " class="page-dot" cx="50" cy="50" r="50"></circle>
         </svg>
@@ -447,7 +447,7 @@ export default {
 }
 
 .page-stage-dots {
-    width: 10vw;
+    gap: 20px;
     padding: 1rem;
 }
 
@@ -536,4 +536,14 @@ export default {
 .b1 {
     margin-top: 2rem;
 }
+
+@media only screen and (max-width: 601px) {
+
+  .registration-fields {
+    width: 100%;
+  }
+  
+}
+
+
 </style>

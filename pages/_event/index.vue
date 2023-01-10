@@ -1,27 +1,31 @@
 <template>
 <div class="voting-page" :style="styleIt">
 
-    <div class="page-top-title row width100 align-center justify-center">
+    <div class="page-top-title row width100 align-center justify-center text-align-center hide-xs">
         {{topTitle}}
     </div>
 
     <div class="page-title-div column align-center width100vw">
 
-        <div class="pageTitleFont center-strict">
+        <div class="show-xs baseFont text-align-center">
+          {{topTitle}}
+        </div>
+
+        <div class="pageTitleFont center-strict text-align-center">
             {{event}}
         </div>
 
-        <div class="subtitle h2Font">
+        <div class="subtitle h2Font text-align-center">
             {{subtitle}}
         </div>
 
-        <div class="smallFont">
+        <div class="smallFont text-align-center">
             {{description}}
         </div>
 
     </div>
 
-    <div class="vote-options row align-center justify-space-around wrap width100vw">
+    <div class="vote-options row align-start justify-space-around column-xs align-center-xs wrap width100vw">
 
         <div class="a-choice column justify-start align-center" v-for="(i, j) in choices" :key="i">
 
@@ -145,6 +149,8 @@ export default {
     z-index: 9000;
     letter-spacing: 0.1rem;
     top: 0;
+    left: 0;
+    transform: translate(calc(50vw - 50%));
     font-weight: 700;
 }
 
@@ -176,6 +182,7 @@ export default {
 .vote-options {
     padding: 2rem 2rem 0;
     background-color: transparent;
+    gap: 40px;
 }
 
 .a-choice {
@@ -183,8 +190,9 @@ export default {
     box-shadow: var(--box-shadow-3);
     text-align: center;
     height: fit-content;
-    width: 20%;
+    width: 250px;
     border-radius: 1rem;
+    margin-bottom: 20px;
     color: var(--white-bg-color);
 }
 
@@ -230,6 +238,26 @@ export default {
     color: var(--secondary-color);
     box-shadow: var(--secondary-glow);
     transition: all 0.2s ease-in-out;
+}
+
+@media only screen and (max-width:1080px) and (min-width: 601px) {
+
+  .page-top-title {
+    font-size: 0.8rem;
+    height: initial;
+    top: 0.8rem;
+    width: 20%;
+  }
+
+  .pageTitleFont {
+    font-size: 60px
+  }
+
+}
+
+@media only screen and (max-width: 600px) {
+
+
 }
 
 </style>
