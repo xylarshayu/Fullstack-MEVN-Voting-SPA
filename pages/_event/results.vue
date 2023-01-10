@@ -1,19 +1,19 @@
 <template>
 <div class="results-page">
     <div class="page-title-div column align-center width100vw">
-        <div class="pageTitleFont center-strict">
+        <div class="pageTitleFont" style="width: initial;">
             Results
         </div>
         <div class="subtitle">
             {{eventRes.event}}
         </div>
-        <div class="baseFont center-strict">
+        <div class="baseFont">
             Your block's id:<br>{{blockRes.id}}
         </div>
     </div>
 
     <div class="blocks column align-center">
-        <div class="a-block row align-center justify-space-between" v-for="i in blockchain" :key="i.id" :class="i.id == blockRes.id ? 'your-block':''">
+        <div class="a-block row" v-for="i in blockchain" :key="i.id" :class="i.id == blockRes.id ? 'your-block':''">
             <div class="block-id">
                 {{i.id}}
             </div>
@@ -33,6 +33,7 @@
 <script>
 export default {
     async asyncData({$auth, $axios, params}) {
+        await $auth.fetchUser();
         const blockchainRes = await $axios.$get(`/api/vote/blockchain/${params.event}`);
         console.log("Blockchain:\n", blockchainRes);
         const blockRes = await $axios.$get(`/api/vote/fetch-vote/${params.event}/${$auth.user.mobile}`);
@@ -92,17 +93,25 @@ export default {
 }
 
 .a-block {
-    margin: 1vh;
-    box-shadow: var(--box-shadow-1);
-    max-height: fit-content;
+    text-align: center;
+    margin: 1vh 0;
     width: 90%;
+    box-shadow: var(--box-shadow-1);
     background-color: var(--menu-color-4);
 }
 
+.a-block > div {
+  padding: 0.1rem;
+}
+
 .block-id {
-    min-width: fit-content;
-    padding: 0 1rem;
+    text-align: center;
     background-color: var(--menu-color-3);
+    width: 25%;
+}
+
+.this-hash {
+  flex-grow: 1;
 }
 
 .your-block {
@@ -116,9 +125,8 @@ export default {
 .blockchoice {
     color: var(--white-bg-color);
     background-color: var(--blue-against-dark-text-color);
-    padding: 0 1rem;
-    width: 10rem;
     text-align: center;
+    width: 10%;
 }
 
 </style>

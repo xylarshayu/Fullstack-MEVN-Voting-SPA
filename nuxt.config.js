@@ -37,10 +37,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    '~/css/flexbox.css',
-    '~/css/main.css',
-  ],
+  css: ['~/css/styles.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -61,8 +58,9 @@ export default {
   ],
 
   auth: {
+    plugins: [ '~/plugins/refresh-auth.js' ],
     redirect: {
-      login: '/',
+      login: '/?to=pleaselogin',
       logout: '/',
       home: '/home',
 
@@ -105,9 +103,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    analyze: true
   },
 
   router: {
-    middleware: ['auth']
+    middleware: ['myAuth', 'auth']
   }
 }

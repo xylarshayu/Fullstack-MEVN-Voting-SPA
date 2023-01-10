@@ -13,15 +13,15 @@ let otpVerify = async (req, res, next) => {
             thisOtp = await otpModel.findOne({ 'email': email }, 'otp');
         }
         if (!thisOtp) {
-            console.log(req.body);
+            console.log("---\nNo otp registered.\n", req.body);
             return res.status(403).json({ 
                 success: false,
                 message: "No OTP Registered"
             });
         } 
         if (thisOtp.otp != otp) {
-            console.log("oo", req.body);
-            console.log(thisOtp);
+            console.log("---\nIncorrect OTP\n", req.body);
+            console.log("---\nThis should've been the OTP\n", thisOtp);
             return res.status(401).json({ 
                 success: false,
                 message: "Incorrect OTP"
@@ -30,7 +30,7 @@ let otpVerify = async (req, res, next) => {
         next();
     }
     catch (error) {
-        console.log(error);
+        console.log("---\nError:\n", error);
         res.status(500).send("Internal server error - checkotp");
     }
 

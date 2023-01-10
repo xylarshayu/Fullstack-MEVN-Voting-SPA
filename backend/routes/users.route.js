@@ -11,14 +11,12 @@ router.get('/exists/:type', async (req, res) => {
 	try {
 		let type = req.params.type;
 		let id = req.query.id;
-		console.log("Params:\n", req.params);
-		console.log("Query:\n", req.query);
 		let thisUser = await userModel.findOne({ [type]: id })
 		if (thisUser) return res.send(true);
 		else return res.send(false);
 	}
 	catch (e) {
-		console.log("Existence check exception:\n", e);
+		console.log("---\nExistence check exception:\n", e);
 		res.send("Internal Server Error");
 	}
 
@@ -48,14 +46,14 @@ router.post('/signup', checkotp, async (req, res) => {
 			country: country
 		})
 		newUser = await newUser.save();
-		console.log("Signed up successfully:\n", newUser);
+		console.log("---\nSigned up successfully:\n", newUser);
 		res.json({
 			success: true,
 			message: "Welcome to Voter-Space"
 		});
 
 	} catch (error) {
-		console.log("Exception users/signup", error);
+		console.log("---\nException users/signup", error);
 		res.json({
 			success: false,
 			message: "Internal Server Error"
@@ -66,15 +64,17 @@ router.post('/signup', checkotp, async (req, res) => {
 
 router.post('/refresh-token', async (req, res) => {
 	try {
-		let refresh_token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
+		let refresh_token = req.body.refresh_token;
 		try {
-			if (refresh_token == null) return res.json({
-				success: false,
-				message: "Token Not Provided"
-			})
+			if (refresh_token == null) {
+				return res.json({
+					success: false,
+					message: "Token Not Provided"
+				})
+			}
 			jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET, {algorithms: ['HS256']}, (err, payload) => {
 				if (err) {
-					console.log("Refresh Token Exceeption during auth:\n", err);
+					console.log("---\nRefresh Token Exceeption during auth:\n", err);
 					return res.json({
 						success: false,
 						message: "Invalid Token"
@@ -88,7 +88,7 @@ router.post('/refresh-token', async (req, res) => {
 			})
 		}
 		catch (error) {
-			console.log("Refresh Token Exceeption during auth 1:\n", error);
+			console.log("---\nRefresh Token Exceeption during auth 1:\n", error);
 			return res.status(500).send("");
 		}
 		let user = req.user;
@@ -107,7 +107,7 @@ router.post('/refresh-token', async (req, res) => {
 			res.status(401).send("Bad Request!");
 		}
 	} catch (error) {
-		console.log("Exception refresh token", error);
+		console.log("---\nException refresh token", error);
 		res.status(500).send("Refresh Token error");
 	}
 })
@@ -131,7 +131,7 @@ router.post('/pre-login', async (req, res) => {
 		});
 	}
 	catch (error) {
-		console.log("Exception pre-login:\n", error);
+		console.log("---\nException pre-login:\n", error);
 		res.status(500).send("Internal Server Error");
 	}
 })
@@ -146,7 +146,7 @@ router.post('/login', checkotp, async (req, res) => {
 		let refresh_token = thisUser.generateRefreshToken();
 		thisUser.refresh_token = refresh_token;
 		thisUser = await thisUser.save();
-		console.log("User and refresh token ", thisUser);
+		console.log("---\nUser and refresh token ", thisUser);
 		res.json({
 			success: true,
 			access_token: access_token,
@@ -154,7 +154,7 @@ router.post('/login', checkotp, async (req, res) => {
 		});
 	}
 	catch (error) {
-		console.log("Exception login error:\n", error);
+		console.log("---\nException login error:\n", error);
 		res.send("Login Error");
 	}
 })
@@ -174,7 +174,7 @@ router.post('/logout', async (req, res) => {
 		});
 	}
 	catch (error) {
-		console.log("Exception logout error:\n", error);
+		console.log("---\nException logout error:\n", error);
 		res.status(500).send("Internal Server Error");
 	}
 })
@@ -198,7 +198,7 @@ router.post('/getuser', auth, async (req, res) => {
 		})
 	}
 	catch (error) {
-		console.log("Exception getuser:\n", error);
+		console.log("---\nException getuser:\n", error);
 	}
 
 })

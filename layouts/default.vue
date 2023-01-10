@@ -1,6 +1,6 @@
 <template>
 <div :style="styleIt" class="default-layout">
-    <header class="row justify-space-between align-center" :class="hasScrolled ? 'header-shifted':''" @click="test">
+    <header class="row justify-space-between align-center" :class="hasScrolled ? 'header-shifted':''">
         <nuxt-link to="/" class="voter-space row align-center">
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 378.11 455.2">
@@ -204,7 +204,8 @@ export default {
     },
     methods: {
         test() {
-            
+            console.log("Refreshing tokens...\n");
+            this.$auth.refreshTokens();
         },
         darkToggle() {
             this.$store.dispatch('switchTheme');

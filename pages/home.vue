@@ -1,7 +1,7 @@
 <template>
 <div id="home-page">
 
-    <div class="page-title-div column align-center width100" @click="test">
+    <div class="page-title-div column align-center width100">
 
         <div class="main-title pageTitleFont center-strict" data-aos="fade-up">
             Ballots
@@ -29,7 +29,7 @@
 
     <div class="voting-space-cards column align-center width100">
         <div v-for="(i, j) in allEvents" :key="i.event" class="page-vote-card" @click="gotoCard(i.event, colors[j%4])">
-            <votespacecard class="page-vote-card pointer" :color="i.color" :title="i.event" :subtitle="i.subtitle" :votetype="i.votetype" :votelevel="i.votelevel" :voteend="date_formatted(i.voteend)" :votedesc="i.description" :voted="$auth.user.events.includes(i.event)" />
+            <votespacecard class="page-vote-card pointer" :color="i.color" :title="i.event" :subtitle="i.subtitle" :votetype="i.votetype" :votelevel="i.votelevel" :voteend="date_formatted(i.voteend)" :votedesc="i.description" :voted="$auth.loggedIn ? $auth.user.events.includes(i.event) : false " />
         </div>
         
 
@@ -52,8 +52,8 @@ import 'aos/dist/aos.css';
 
 export default {
     async asyncData({$axios, $auth}) {
-        const allEvents = await $axios.$get('/api/vote/fetch-all');
-        await $auth.fetchUser();
+        const allEvents = await $axios.$get('/api/vote/fetch-all');/* 
+        await $auth.fetchUser(); */
         console.log(allEvents);
         return { allEvents };
     },
@@ -73,9 +73,6 @@ export default {
             let n = k.toLocaleString().split(",")[0];
             console.log("Date: ", n);
             return n;
-        },
-        test() {
-            console.log("test\n", this.$auth.user.mobile);
         },
         gotoCard(route, color) {
             console.log(route);

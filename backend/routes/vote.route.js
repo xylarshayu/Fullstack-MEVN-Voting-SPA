@@ -171,7 +171,6 @@ router.get('/blockchain/:event', async (req, res) => {
             choice: lastblock.choice,
             id: lastblock._id
         });
-        console.log(lastblock);
         let block = lastblock;
         let prev_hash = lastblock.prev_hash;
         while (true) {

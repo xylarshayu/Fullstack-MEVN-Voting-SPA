@@ -9,17 +9,17 @@ router.post('/makeid', async (req, res) => {
         let mobile = req.body.mobile;
         let checkMobile = await natidModel.findOne({ mobile: mobile });
         if (checkMobile) return res.send(checkMobile.national_id);
-        let id = Math.floor(Math.random() * 10000000000);
-        if (id.toString().length < 10) id += 1000000000;
+        let id = Math.floor(1000000000 + Math.random() * 9000000000);
+        /* This checks if the national ID already exists, randomizes it again if yes */
         while (await natidModel.findOne({ national_id: id.toString() })) {
-            id = Math.floor(Math.random() * 10000000000);
+          id = Math.floor(1000000000 + Math.random() * 9000000000);
         }
         let user = new natidModel({
             mobile: mobile,
-            national_id: id
+            national_id: id.toString()
         });
         user = await user.save();
-        console.log("User Genereted:\n**************************\n", user);
+        console.log("---\nUser NatID Genereted:\n**************************\n", user);
         return res.send(user.national_id);
     }
     catch (error) {
@@ -31,7 +31,7 @@ router.post('/makeid', async (req, res) => {
 router.post('/getnumber', async (req, res) => {
     try {
         let id = req.body.natid;
-        console.log(req.body);
+        console.log("---\n/getnumber\n", req.body);
         let user = await natidModel.findOne({ national_id: id }, 'mobile');
         if (user) return res.json({
             success: true,
@@ -47,7 +47,7 @@ router.post('/getnumber', async (req, res) => {
         };
     }
     catch (error) {
-        console.log("GetNumber Exception:\n", error);
+        console.log("---\nGetNumber Exception:\n", error);
         res.status(500).json({
             success: false,
             message: "Internal Server Error",
